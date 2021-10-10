@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -82,10 +85,6 @@ class LandingService with ChangeNotifier {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: constantColors.blueGreyColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12.0),
-                  topRight: Radius.circular(12.0),
-                ),
               ),
               child: Column(
                 children: [
@@ -98,19 +97,25 @@ class LandingService with ChangeNotifier {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: TextField(
-                      controller: userEmailController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter Email...',
-                        hintStyle: TextStyle(
+                    child: Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        validator: (value) => EmailValidator.validate(value!)
+                            ? null
+                            : "Please enter a valid email",
+                        controller: userEmailController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Email...',
+                          hintStyle: TextStyle(
+                              color: constantColors.whiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0),
+                        ),
+                        style: TextStyle(
                             color: constantColors.whiteColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.0),
+                            fontSize: 18.0),
                       ),
-                      style: TextStyle(
-                          color: constantColors.whiteColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0),
                     ),
                   ),
                   Padding(
@@ -131,31 +136,39 @@ class LandingService with ChangeNotifier {
                           fontSize: 18.0),
                     ),
                   ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
                   FloatingActionButton(
                     onPressed: () {
                       if (userEmailController.text.isNotEmpty &&
                           userPasswordController.text.isNotEmpty) {
-                        Provider.of<Authentication>(context, listen: false)
-                            .logIntoAccount(userEmailController.text,
-                                userPasswordController.text)
-                            .whenComplete(() {
-                          Provider.of<FirebaseOperations>(context,
-                                  listen: false)
-                              .initUserData(context)
+                        if (EmailValidator.validate(userEmailController.text)) {
+                          Provider.of<Authentication>(context, listen: false)
+                              .logIntoAccount(userEmailController.text,
+                                  userPasswordController.text)
                               .whenComplete(() {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                PageTransition(
-                                    child: const HomePage(),
-                                    type: PageTransitionType.bottomToTop),
-                                (route) => false);
+                            Provider.of<FirebaseOperations>(context,
+                                    listen: false)
+                                .initUserData(context)
+                                .whenComplete(() {
+                              Timer(const Duration(seconds: 2), () {
+                                userEmailController.clear();
+                                userPasswordController.clear();
+                              });
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  PageTransition(
+                                      child: const HomePage(),
+                                      type: PageTransitionType.bottomToTop),
+                                  (route) => false);
+                            });
                           });
-                        });
-
-                        userEmailController.clear();
-                        userPasswordController.clear();
+                        } else {
+                          warningText(context, 'Wrong Email Format');
+                        }
                       } else {
-                        warningText(context, 'Fill all the data');
+                        warningText(context, 'Fill All The Data');
                       }
                     },
                     backgroundColor: constantColors.blueColor,
@@ -314,7 +327,6 @@ class LandingService with ChangeNotifier {
           return Container(
             decoration: BoxDecoration(
               color: constantColors.darkColor,
-              borderRadius: BorderRadius.circular(15.0),
             ),
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width,

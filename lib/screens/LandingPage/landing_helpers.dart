@@ -140,10 +140,6 @@ class LandingHelpers with ChangeNotifier {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: constantColors.blueGreyColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                topRight: Radius.circular(15.0),
-              ),
             ),
             child: Column(
               children: [

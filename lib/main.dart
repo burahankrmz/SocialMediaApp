@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
+import 'package:project2_social_media/screens/Feed/feed_helpers.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_services.dart';
@@ -8,6 +9,7 @@ import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/screens/Profile/profile_helpers.dart';
 import 'package:project2_social_media/services/authentication.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
+import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/SplashScreen/splash_screen.dart';
@@ -71,6 +73,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LandingUtils()),
         ChangeNotifierProvider(create: (_) => HomePageHelpers()),
         ChangeNotifierProvider(create: (_) => ProfileHelpers()),
+        ChangeNotifierProvider(create: (_) => FeedHelpers()),
+        ChangeNotifierProvider(create: (_) => UploadPost()),
       ],
     );
   }

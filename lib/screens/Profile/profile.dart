@@ -11,11 +11,11 @@ import 'package:project2_social_media/screens/LandingPage/landing_page.dart';
 import 'package:project2_social_media/screens/Profile/profile_helpers.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class Profile extends StatelessWidget {
   Profile({Key? key}) : super(key: key);
   final ConstantColors constantColors = ConstantColors();
   late DocumentSnapshot userData;
-  //final orientation = MediaQuery.of(context).orientation;
 
   @override
   Widget build(BuildContext context) {
