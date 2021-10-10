@@ -137,7 +137,7 @@ class LandingService with ChangeNotifier {
                     ),
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   FloatingActionButton(
                     onPressed: () {
@@ -291,7 +291,6 @@ class LandingService with ChangeNotifier {
                                 'userimage': Provider.of<LandingUtils>(context,
                                         listen: false)
                                     .getUserAvatarUrl,
-                                //'userpassword': userPasswordController.text
                               });
                             }).whenComplete(() {
                               Navigator.pushReplacement(

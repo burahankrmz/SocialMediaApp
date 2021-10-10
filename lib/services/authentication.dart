@@ -49,6 +49,13 @@ class Authentication with ChangeNotifier {
         await firebaseAuth.signInWithCredential(authCredential);
     final User? user = userCredential.user;
     userUid = user!.uid;
+    FirebaseOperations().createGoogleUserCollection(userUid!,{
+      'useruid': userUid,
+      'useremail': user.email,
+      'username': user.displayName,
+      'userimage': user.photoURL
+    });
+
     print('Google User Uid => $userUid');
     notifyListeners();
   }

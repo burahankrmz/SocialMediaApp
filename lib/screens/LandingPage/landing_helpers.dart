@@ -8,6 +8,7 @@ import 'package:project2_social_media/screens/HomePage/homepage.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_services.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/services/authentication.dart';
+import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
 
 class LandingHelpers with ChangeNotifier {
@@ -90,11 +91,16 @@ class LandingHelpers with ChangeNotifier {
                 Provider.of<Authentication>(context, listen: false)
                     .signInWithGoogle()
                     .whenComplete(() {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const HomePage(),
-                          type: PageTransitionType.leftToRight));
+                  Provider.of<FirebaseOperations>(context, listen: false)
+                      .initUserData(context)
+                      .whenComplete(() {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        PageTransition(
+                            child: const HomePage(),
+                            type: PageTransitionType.bottomToTop),
+                        (route) => false);
+                  });
                 });
               },
               child: Container(
@@ -109,22 +115,6 @@ class LandingHelpers with ChangeNotifier {
                     borderRadius: BorderRadius.circular(10.0)),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                print('clicked');
-              },
-              child: Container(
-                child: Icon(
-                  FontAwesomeIcons.facebook,
-                  color: constantColors.blueColor,
-                ),
-                width: 80.0,
-                height: 40.0,
-                decoration: BoxDecoration(
-                    border: Border.all(color: constantColors.blueColor),
-                    borderRadius: BorderRadius.circular(10.0)),
-              ),
-            )
           ],
         ),
       ),

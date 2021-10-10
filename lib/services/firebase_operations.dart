@@ -37,6 +37,13 @@ class FirebaseOperations with ChangeNotifier {
         .set(data);
   }
 
+  Future createGoogleUserCollection(String googleUid,dynamic data) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(googleUid)
+        .set(data);
+  }
+
   Future initUserData(BuildContext context) {
     return FirebaseFirestore.instance
         .collection('users')
