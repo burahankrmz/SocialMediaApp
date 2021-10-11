@@ -18,14 +18,14 @@ class FirebaseOperations with ChangeNotifier {
     imageUploadTask = imageReference.putFile(
         Provider.of<LandingUtils>(context, listen: false).getUserAvatar);
     await imageUploadTask.whenComplete(() {
-      print('image uploaded');
+      debugPrint('image uploaded');
     });
     imageReference.getDownloadURL().then((url) {
-      print(url);
+      debugPrint(url);
       Provider.of<LandingUtils>(context, listen: false).userAvatarUrl =
           url.toString();
 
-      print('the user profile avatar url => $url');
+      debugPrint('the user profile avatar url => $url');
       notifyListeners();
     });
   }

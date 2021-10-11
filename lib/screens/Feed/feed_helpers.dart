@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:like_button/like_button.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,8 @@ class FeedHelpers with ChangeNotifier {
       actions: [
         IconButton(
           onPressed: () {
-            Provider.of<UploadPost>(context, listen: false).takeImage(context);
+            Provider.of<UploadPost>(context, listen: false)
+                .takeImage(context);
           },
           icon: const Icon(
             Icons.add_a_photo,
@@ -127,7 +128,7 @@ class FeedHelpers with ChangeNotifier {
                     ),
                     trailing: IconButton(
                       onPressed: () {},
-                      icon:const  Icon(Icons.more_horiz),
+                      icon: const Icon(Icons.more_horiz),
                     ),
                   ),
                 ),
@@ -155,12 +156,18 @@ class FeedHelpers with ChangeNotifier {
                 ),
                 Row(
                   children: [
-                   const  SizedBox(
+                    const SizedBox(
                       width: 14.0,
                     ),
+                    const LikeButton(
+                      likeCountPadding: EdgeInsets.only(left: 8.0),
+                      size: 20.0,
+                      likeCount: 2515,
+                    ),
+                    /*
                     IconButton(
                       onPressed: () {},
-                      icon:const  Icon(
+                      icon: const Icon(
                         FontAwesomeIcons.heart,
                         size: 20.0,
                       ),
@@ -170,6 +177,7 @@ class FeedHelpers with ChangeNotifier {
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
+                    */
                     const SizedBox(
                       width: 10.0,
                     ),
@@ -180,14 +188,15 @@ class FeedHelpers with ChangeNotifier {
                           Icon(
                             EvaIcons.messageSquareOutline,
                             size: 20.0,
+                            color: Colors.grey,
                           ),
                           SizedBox(
                             width: 10.0,
                           ),
                           Text(
                             '350',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14.0),
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 14.0),
                           ),
                         ],
                       ),

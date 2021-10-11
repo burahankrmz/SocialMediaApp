@@ -299,7 +299,7 @@ class LandingService with ChangeNotifier {
                                       child: const HomePage(),
                                       type: PageTransitionType.bottomToTop));
                             });
-                            print('account created');
+                            debugPrint('account created');
                           } else {
                             warningText(context, 'Fill all the data');
                           }

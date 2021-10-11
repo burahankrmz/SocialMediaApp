@@ -16,14 +16,14 @@ class LandingUtils with ChangeNotifier {
   Future pickUserAvatar(BuildContext context, ImageSource source) async {
     final pickedUserAvatar = await picker.pickImage(source: source);
     pickedUserAvatar == null
-        ? print('Select image')
+        ? debugPrint('Select image')
         : userAvatar = File(pickedUserAvatar.path);
-    print(userAvatar!.path);
+    debugPrint(userAvatar!.path);
 
     userAvatar != null
         ? Provider.of<LandingService>(context, listen: false)
             .showUserAvatar(context)
-        : print('image upload error');
+        : debugPrint('image upload error');
     notifyListeners();
   }
 

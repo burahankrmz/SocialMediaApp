@@ -19,7 +19,7 @@ class Authentication with ChangeNotifier {
     User user = userCredential.user!;
     userUid = user.uid;
     FirebaseOperations().initUserData2();
-    print(userUid);
+    debugPrint(userUid);
     notifyListeners();
   }
 
@@ -28,7 +28,7 @@ class Authentication with ChangeNotifier {
         .createUserWithEmailAndPassword(email: email, password: password);
     User user = userCredential.user!;
     userUid = user.uid;
-    print(userUid);
+    debugPrint(userUid);
     notifyListeners();
   }
 
@@ -37,7 +37,7 @@ class Authentication with ChangeNotifier {
   }
 
   Future signInWithGoogle() async {
-    print('Sign in with google');
+    debugPrint('Sign in with google');
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
@@ -56,7 +56,7 @@ class Authentication with ChangeNotifier {
       'userimage': user.photoURL
     });
 
-    print('Google User Uid => $userUid');
+    debugPrint('Google User Uid => $userUid');
     notifyListeners();
   }
 

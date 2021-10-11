@@ -21,7 +21,7 @@ class HomePageHelpers with ChangeNotifier {
       selectedColor: const Color(0xff040307),
       //constantColors.blueColor,
       unSelectedColor: constantColors.greyColor,
-      elevation: 20.0,
+      elevation: 100.0,
       //constantColors.whiteColor,
       strokeColor: constantColors.darkColor,
       scaleFactor: 0.3,

@@ -4,6 +4,7 @@ import 'package:project2_social_media/screens/Chatroom/chatroom.dart';
 import 'package:project2_social_media/screens/Feed/feed.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/Profile/profile.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: constantColors.darkColor,
+      backgroundColor: Colors.grey.shade200,
       body: PageView(
         controller: homepageController,
         children: [
