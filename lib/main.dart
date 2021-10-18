@@ -6,9 +6,11 @@ import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_services.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
+import 'package:project2_social_media/screens/PostComments/postcomments_helper.dart';
 import 'package:project2_social_media/screens/Profile/profile_helpers.dart';
 import 'package:project2_social_media/services/authentication.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
+import 'package:project2_social_media/utils/post_options.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
 
@@ -75,6 +77,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileHelpers()),
         ChangeNotifierProvider(create: (_) => FeedHelpers()),
         ChangeNotifierProvider(create: (_) => UploadPost()),
+        ChangeNotifierProvider(create: (_) => PostFunctions()),
+        ChangeNotifierProvider(create: (_) => PostCommentsHelper()),
+
+
       ],
     );
   }

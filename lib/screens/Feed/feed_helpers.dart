@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:like_button/like_button.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
+import 'package:project2_social_media/screens/PostComments/post_comments.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -159,7 +161,14 @@ class FeedHelpers with ChangeNotifier {
                               width: 10.0,
                             ),
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: PostComments(
+                                            doc: snapshot.data!.docs[index]),
+                                        type: PageTransitionType.bottomToTop));
+                              },
                               child: Row(
                                 children: const [
                                   Icon(
@@ -187,137 +196,6 @@ class FeedHelpers with ChangeNotifier {
               });
         }
       },
-    );
-  }
-
-  Widget feedBoydV3(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return CustomScrollView(
-            slivers: [
-              myPosts(context, snapshot),
-            ],
-          );
-        }
-      },
-    );
-  }
-
-  SliverGrid myPosts(
-      BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-    return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        mainAxisSpacing: 0.2,
-        crossAxisSpacing: 10.0,
-        childAspectRatio: 0.9,
-        crossAxisCount: 1,
-      ),
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        return Card(
-          margin: const EdgeInsets.only(
-            top: 18.0,
-            right: 18.0,
-            left: 18.0,
-          ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          color: Colors.white,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: ListTile(
-                  leading: Material(
-                    color: Colors.transparent,
-                    elevation: 20.0,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        snapshot.data!.docs[index]['userimage'],
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    snapshot.data!.docs[index]['username'],
-                    style: const TextStyle(
-                        fontSize: 13.0, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: const Text(
-                    '5 min',
-                    style: TextStyle(
-                      fontSize: 10.0,
-                    ),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.more_horiz),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Material(
-                  color: Colors.transparent,
-                  elevation: 20.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: CachedNetworkImage(
-                      imageUrl: snapshot.data!.docs[index]['postimage'],
-                      height: MediaQuery.of(context).size.height / 2,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 14.0,
-                  ),
-                  const LikeButton(
-                    likeCountPadding: EdgeInsets.only(left: 8.0),
-                    size: 20.0,
-                    likeCount: 2515,
-                  ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  MaterialButton(
-                    onPressed: () {},
-                    child: Row(
-                      children: const [
-                        Icon(
-                          EvaIcons.messageSquareOutline,
-                          size: 20.0,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Text(
-                          '350',
-                          style: TextStyle(color: Colors.grey, fontSize: 14.0),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        );
-      }, childCount: snapshot.data!.docs.length),
     );
   }
 
