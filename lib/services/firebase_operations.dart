@@ -11,6 +11,8 @@ class FirebaseOperations with ChangeNotifier {
   late UploadTask imageUploadTask;
   String? initUserEmail, initUserName, initUserImage;
   String get getInitUserImage => initUserImage!;
+  String get getInitUserName => initUserName!;
+  String get getInitUserEmail => initUserEmail!;
 
   Future uploadUserAvatar(BuildContext context) async {
     Reference imageReference = FirebaseStorage.instance.ref().child(
@@ -37,7 +39,7 @@ class FirebaseOperations with ChangeNotifier {
         .set(data);
   }
 
-  Future createGoogleUserCollection(String googleUid,dynamic data) async {
+  Future createGoogleUserCollection(String googleUid, dynamic data) async {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(googleUid)
@@ -48,22 +50,6 @@ class FirebaseOperations with ChangeNotifier {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
-        .get()
-        .then((doc) {
-      debugPrint('fetcing user data');
-      initUserName = doc.data()!['username'];
-      initUserEmail = doc.data()!['useremail'];
-      initUserImage = doc.data()!['userimage'];
-      debugPrint(
-          'fetched user data \n $initUserEmail \n $initUserName \n $initUserImage');
-      notifyListeners();
-    });
-  }
-
-  Future initUserData2() {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((doc) {
       debugPrint('fetcing user data');
@@ -91,5 +77,9 @@ class FirebaseOperations with ChangeNotifier {
           'fetched user data \n $initUserEmail \n $initUserName \n $initUserImage');
       notifyListeners();
     });
+  }
+
+  Future uploadPosts(String postId, dynamic data) async {
+    return FirebaseFirestore.instance.collection('posts').doc(postId).set(data);
   }
 }

@@ -1,11 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
+import 'package:project2_social_media/screens/LandingPage/landing_services.dart';
+import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class EditPost extends StatelessWidget {
   EditPost({Key? key}) : super(key: key);
   final ConstantColors constantColors = ConstantColors();
+  final TextEditingController captionController = TextEditingController();
+  String? postImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,57 @@ class EditPost extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Provider.of<UploadPost>(context, listen: false)
+                  .uploadPostImageToFirebase()
+                  .whenComplete(() async {
+                debugPrint(Provider.of<UploadPost>(context, listen: false)
+                    .uploadPostImageUrl);
+                Provider.of<FirebaseOperations>(context, listen: false)
+                    .uploadPosts(captionController.text, {
+                  'caption': captionController.text,
+                  'postimage': Provider.of<UploadPost>(context, listen: false)
+                      .uploadPostImageUrl,
+                  'username':
+                      Provider.of<FirebaseOperations>(context, listen: false)
+                          .getInitUserName,
+                  'userimage':
+                      Provider.of<FirebaseOperations>(context, listen: false)
+                          .getInitUserImage,
+                  'useruid': FirebaseAuth.instance.currentUser!.uid,
+                  'time': Timestamp.now(),
+                  'useremail':
+                      Provider.of<FirebaseOperations>(context, listen: false)
+                          .getInitUserEmail
+                }).whenComplete(() async {
+                  FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .collection('posts')
+                      .add({
+                    'caption': captionController.text,
+                    'postimage': Provider.of<UploadPost>(context, listen: false)
+                        .uploadPostImageUrl,
+                    'username':
+                        Provider.of<FirebaseOperations>(context, listen: false)
+                            .getInitUserName,
+                    'userimage':
+                        Provider.of<FirebaseOperations>(context, listen: false)
+                            .getInitUserImage,
+                    'useruid': FirebaseAuth.instance.currentUser!.uid,
+                    'time': Timestamp.now(),
+                    'useremail':
+                        Provider.of<FirebaseOperations>(context, listen: false)
+                            .getInitUserEmail
+                  }).whenComplete(() {
+                    captionController.clear();
+                    Navigator.pop(context);
+                    Provider.of<LandingService>(context, listen: false)
+                        .warningText(context, 'Post Uploaded Successfully.');
+                  });
+                });
+              });
+            },
             icon: const Icon(Icons.check, color: Colors.black),
           ),
         ],
@@ -48,6 +105,7 @@ class EditPost extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: captionController,
                   minLines: 7,
                   maxLines: 7,
                   maxLength: 255,

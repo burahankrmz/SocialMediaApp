@@ -18,7 +18,6 @@ class Authentication with ChangeNotifier {
     });
     User user = userCredential.user!;
     userUid = user.uid;
-    FirebaseOperations().initUserData2();
     debugPrint(userUid);
     notifyListeners();
   }

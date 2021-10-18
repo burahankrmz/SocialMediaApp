@@ -70,7 +70,36 @@ class Profile extends StatelessWidget {
           ),
         ),
       ),
-      body: StreamBuilder<DocumentSnapshot>(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('posts')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            //userData = snapshot.data.docs;
+            return CustomScrollView(
+              slivers: [
+                Provider.of<ProfileHelpers>(context, listen: false)
+                    .infoContainerv2(context),
+                Provider.of<ProfileHelpers>(context, listen: false)
+                    .myPosts(context, snapshot),
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+/*
+StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -93,6 +122,4 @@ class Profile extends StatelessWidget {
           }
         },
       ),
-    );
-  }
-}
+*/

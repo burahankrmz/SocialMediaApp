@@ -17,8 +17,8 @@ class UploadPost with ChangeNotifier {
   final ImagePicker picker = ImagePicker();
   File? uploadPostImage;
   File get getUploadPostImage => uploadPostImage!;
-  late String uploadPostImageUrl;
-  String get getUploadPostImageUrl => uploadPostImageUrl;
+  String? uploadPostImageUrl;
+  String get getUploadPostImageUrl => uploadPostImageUrl!;
   late UploadTask postImageUploadTask;
 
   Future pickPostImage(BuildContext context, ImageSource source) async {
@@ -26,12 +26,6 @@ class UploadPost with ChangeNotifier {
     uploadPostImageVal == null
         ? debugPrint('Select image')
         : uploadPostImage = File(uploadPostImageVal.path);
-    //print(uploadPostImageVal!.path);
-    /*
-    uploadPostImage != null
-        ? Provider.of<UploadPost>(context, listen: false).showPostImage(context)
-        : debugPrint('image upload error');
-        */
 
     notifyListeners();
   }
@@ -45,18 +39,17 @@ class UploadPost with ChangeNotifier {
     await postImageUploadTask.whenComplete(() {
       debugPrint('Picture uploaded successfully');
     });
-
-    imageReference.getDownloadURL().then((imageUrl) {
+    await imageReference.getDownloadURL().then((imageUrl) {
       uploadPostImageUrl = imageUrl;
       debugPrint(uploadPostImageUrl);
     });
+
     notifyListeners();
   }
 
   takeImage(BuildContext context) {
     return showModalBottomSheet(
         enableDrag: false,
-        //isDismissible: false,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24),
@@ -137,140 +130,6 @@ class UploadPost with ChangeNotifier {
                 },
               ),
             ],
-          );
-        });
-  }
-
-  showPostImage(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.40,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: constantColors.blueGreyColor,
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 150.0),
-                  child: Divider(
-                    thickness: 4.0,
-                    color: constantColors.whiteColor,
-                  ),
-                ),
-                SizedBox(
-                  height: 200.0,
-                  width: 400.0,
-                  child: Image.file(
-                    uploadPostImage!,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Reselect',
-                        style: TextStyle(
-                          color: constantColors.whiteColor,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          decorationColor: constantColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      color: constantColors.blueColor,
-                      onPressed: () {
-                        uploadPostImageToFirebase().whenComplete(() {
-                          debugPrint('Image Uploaded');
-                        });
-                      },
-                      child: Text(
-                        'Confirm Image',
-                        style: TextStyle(
-                          color: constantColors.whiteColor,
-                          fontWeight: FontWeight.bold,
-                          decorationColor: constantColors.whiteColor,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  editPOstSheet(BuildContext context) {
-    return showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.75,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(color: constantColors.whiteColor),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 150.0),
-                  child: Divider(
-                    thickness: 4.0,
-                    color: constantColors.whiteColor,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: TextField(
-                    minLines: 7,
-                    maxLines: 7,
-                    maxLength: 255,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      focusColor: constantColors.darkColor,
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: constantColors.darkColor),
-                      ),
-                      hintText: 'Caption...',
-                      labelText: 'Post Caption',
-                      floatingLabelStyle: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      alignLabelWithHint: false,
-                      labelStyle: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ),
-                ),
-                MaterialButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: constantColors.darkColor,
-                      fontWeight: FontWeight.bold,
-                      decorationColor: constantColors.whiteColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           );
         });
   }

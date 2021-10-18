@@ -28,7 +28,6 @@ class LandingPage extends StatelessWidget {
   Widget bodyColor() {
     return Container(
       decoration: BoxDecoration(
-        //color: constantColors.whiteColor,
         gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

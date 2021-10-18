@@ -15,19 +15,13 @@ class HomePageHelpers with ChangeNotifier {
       currentIndex: index,
       bubbleCurve: Curves.bounceIn,
       scaleCurve: Curves.decelerate,
-      //blurEffect: true,
       borderRadius: const Radius.circular(30.0),
-      //const Radius.circular(30.0),
       selectedColor: const Color(0xff040307),
-      //constantColors.blueColor,
       unSelectedColor: constantColors.greyColor,
       elevation: 100.0,
-      //constantColors.whiteColor,
       strokeColor: constantColors.darkColor,
       scaleFactor: 0.3,
-      //isFloating: true,
       iconSize: 30.0,
-      //opacity: 0.9,
       onTap: (value) {
         index = value;
         pageController.jumpToPage(value);
@@ -48,36 +42,9 @@ class HomePageHelpers with ChangeNotifier {
             backgroundImage: NetworkImage(
                 Provider.of<FirebaseOperations>(context, listen: false)
                     .getInitUserImage),
-          ), //userImage(context),
+          ),
         ),
       ],
     );
   }
 }
-
-//StreamBuilder CircleAvatar
-
-/*
-userImage(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(Provider.of<Authentication>(context, listen: false).userUid)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            userData = snapshot.data!;
-            return CircleAvatar(
-              radius: 35.0,
-              backgroundImage: NetworkImage(userData['userimage']),
-            );
-          }
-        });
-  }
-}
-
-*/

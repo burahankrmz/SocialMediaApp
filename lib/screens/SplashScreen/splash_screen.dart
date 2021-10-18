@@ -24,7 +24,6 @@ class _SplashScreenState extends State<SplashScreen> {
       debugPrint(FirebaseAuth.instance.currentUser!.uid.toString());
       Provider.of<FirebaseOperations>(context, listen: false)
           .alreadyLoginData(context);
-      //debugPrint(FirebaseOperations().initUserEmail);
       Timer(
         const Duration(seconds: 3),
         () => Navigator.pushAndRemoveUntil(
