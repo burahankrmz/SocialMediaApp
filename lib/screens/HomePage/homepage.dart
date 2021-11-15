@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
-import 'package:project2_social_media/screens/Chatroom/chatroom.dart';
 import 'package:project2_social_media/screens/Feed/feed.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/Profile/profile.dart';
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         controller: homepageController,
         children: [
           Feed(),
-          Chatroom(),
+          //Chatroom(),
           Profile(),
         ],
         physics: const ScrollPhysics(),

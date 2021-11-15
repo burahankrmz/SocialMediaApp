@@ -1,13 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/screens/PostComments/post_comments.dart';
+import 'package:project2_social_media/utils/post_options.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -72,14 +75,10 @@ class FeedHelpers with ChangeNotifier {
           return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (BuildContext context, int index) {
-                Timestamp timestamp = snapshot.data!.docs[index]['time'];
-                var time = readTimestamp(timestamp.millisecondsSinceEpoch);
-
                 return Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10.0),
                   child: Container(
-                    //height: MediaQuery.of(context).size.height,
-                    //width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30.0),
@@ -92,9 +91,9 @@ class FeedHelpers with ChangeNotifier {
                           child: ListTile(
                             leading: Material(
                               color: Colors.transparent,
-                              elevation: 20.0,
+                              elevation: 15.0,
                               child: CircleAvatar(
-                                backgroundImage: NetworkImage(
+                                backgroundImage: CachedNetworkImageProvider(
                                   snapshot.data!.docs[index]['userimage'],
                                 ),
                               ),
@@ -105,13 +104,18 @@ class FeedHelpers with ChangeNotifier {
                                   fontSize: 13.0, fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(
-                              time,
+                              PostFunctions().showTimeAgo(
+                                  snapshot.data!.docs[index]['time']),
                               style: const TextStyle(
                                 fontSize: 10.0,
                               ),
                             ),
                             trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Provider.of<PostFunctions>(context,
+                                        listen: false)
+                                    .showPostOptions(context);
+                              },
                               icon: const Icon(Icons.more_horiz),
                             ),
                           ),
@@ -126,7 +130,8 @@ class FeedHelpers with ChangeNotifier {
                               child: CachedNetworkImage(
                                 imageUrl: snapshot.data!.docs[index]
                                     ['postimage'],
-                                height: MediaQuery.of(context).size.height / 2,
+                                height:
+                                    MediaQuery.of(context).size.height / 2.5,
                                 width: MediaQuery.of(context).size.width,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) {
@@ -152,11 +157,73 @@ class FeedHelpers with ChangeNotifier {
                             const SizedBox(
                               width: 14.0,
                             ),
-                            const LikeButton(
-                              likeCountPadding: EdgeInsets.only(left: 8.0),
-                              size: 20.0,
-                              likeCount: 2515,
-                            ),
+                            StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .doc(snapshot.data!.docs[index]['caption'])
+                                    .collection('likes')
+                                    .snapshots(),
+                                builder: (context, snapshotLikes) {
+                                  if (snapshotLikes.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else {
+                                    for (var snapshotfind
+                                        in snapshotLikes.data!.docs) {
+                                      if (snapshotfind['useruid'] ==
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid) {
+                                        return LikeButton(
+                                          onTap: (bool isLiked) {
+                                            Provider.of<PostFunctions>(context,
+                                                    listen: false)
+                                                .removeLike(
+                                                    context,
+                                                    snapshot.data!.docs[index]
+                                                        ['caption'],
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid);
+                                            return PostFunctions()
+                                                .onLikeButtonTapped(isLiked);
+                                          },
+                                          likeCountPadding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          likeCount:
+                                              snapshotLikes.data!.docs.length,
+                                          likeBuilder: (_) {
+                                            return const Icon(
+                                                FontAwesomeIcons.solidHeart,
+                                                size: 20.0,
+                                                color: Colors.red);
+                                          },
+                                        );
+                                      }
+                                    }
+                                    return LikeButton(
+                                      onTap: (bool isLiked) {
+                                        Provider.of<PostFunctions>(context,
+                                                listen: false)
+                                            .addLike(
+                                                context,
+                                                snapshot.data!.docs[index]
+                                                    ['caption'],
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid)
+                                            .whenComplete(() {
+                                          //isLiked = true;
+                                        });
+                                        return PostFunctions()
+                                            .onLikeButtonTapped(isLiked);
+                                      },
+                                      likeCountPadding:
+                                          const EdgeInsets.only(left: 8.0),
+                                      size: 20.0,
+                                      likeCount:
+                                          snapshotLikes.data!.docs.length,
+                                      //isLiked: isLiked,
+                                    );
+                                  }
+                                }),
                             const SizedBox(
                               width: 10.0,
                             ),
@@ -170,19 +237,33 @@ class FeedHelpers with ChangeNotifier {
                                         type: PageTransitionType.bottomToTop));
                               },
                               child: Row(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     EvaIcons.messageSquareOutline,
                                     size: 20.0,
                                     color: Colors.grey,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10.0,
                                   ),
-                                  Text(
-                                    '350',
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 14.0),
+                                  StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(snapshot.data!.docs[index]
+                                            ['caption'])
+                                        .collection('comments')
+                                        .orderBy('time')
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else {
+                                        return Text(snapshot.data!.docs.length
+                                            .toString());
+                                      }
+                                    },
                                   ),
                                 ],
                               ),

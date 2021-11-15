@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/main.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:project2_social_media/screens/PostComments/post_comments.dart';
 
 class ProfileHelpers with ChangeNotifier {
   ConstantColors constantColors = ConstantColors();
@@ -268,13 +271,23 @@ class ProfileHelpers with ChangeNotifier {
         ),
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return Container(
-              //margin: const EdgeInsets.only(top: 8.0),
-              //padding: const EdgeInsets.only(bottom: 8.0),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(snapshot.data!.docs[index]['postimage']),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: PostComments(doc: snapshot.data!.docs[index]),
+                        type: PageTransitionType.fade));
+              },
+              child: Container(
+                //margin: const EdgeInsets.only(top: 8.0),
+                //padding: const EdgeInsets.only(bottom: 8.0),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: CachedNetworkImageProvider(
+                        snapshot.data!.docs[index]['postimage']),
+                  ),
                 ),
               ),
             );

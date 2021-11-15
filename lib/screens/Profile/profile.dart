@@ -75,6 +75,7 @@ class Profile extends StatelessWidget {
             .collection('users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .collection('posts')
+            .orderBy('time', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -97,29 +98,3 @@ class Profile extends StatelessWidget {
     );
   }
 }
-
-/*
-StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            userData = snapshot.data!;
-            return CustomScrollView(
-              slivers: [
-                Provider.of<ProfileHelpers>(context, listen: false)
-                    .infoContainer(context, userData),
-                Provider.of<ProfileHelpers>(context, listen: false)
-                    .myPosts(context, userData),
-              ],
-            );
-          }
-        },
-      ),
-*/
