@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/screens/Feed/feed.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
-import 'package:project2_social_media/screens/Profile/profile.dart';
+import 'package:project2_social_media/screens/Profile/baseprofile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Feed(),
           //Chatroom(),
-          Profile(),
+          BaseProfile(),
         ],
         physics: const ScrollPhysics(),
         onPageChanged: (page) {

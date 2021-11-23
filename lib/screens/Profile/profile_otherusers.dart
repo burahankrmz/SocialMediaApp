@@ -1,24 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
-import 'package:project2_social_media/screens/LandingPage/landing_page.dart';
-import 'package:project2_social_media/screens/Profile/profile_helpers.dart';
 import 'package:provider/provider.dart';
 
+import 'baseprofile_helpers.dart';
+
 // ignore: must_be_immutable
-class Profile extends StatelessWidget {
-  Profile({Key? key}) : super(key: key);
+class ProfileOtherUsers extends StatelessWidget {
+  ProfileOtherUsers({Key? key, required this.userUid}) : super(key: key);
   final ConstantColors constantColors = ConstantColors();
-  late DocumentSnapshot userData;
+  String userUid;
 
   @override
   Widget build(BuildContext context) {
+    dynamic userData;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -26,7 +25,7 @@ class Profile extends StatelessWidget {
           children: [
             RichText(
               text: TextSpan(
-                text: 'My ',
+                text: 'Social ',
                 style: TextStyle(
                     color: constantColors.darkColor,
                     fontWeight: FontWeight.bold,
@@ -35,7 +34,7 @@ class Profile extends StatelessWidget {
             ),
             RichText(
               text: TextSpan(
-                text: 'Profile',
+                text: 'Media',
                 style: TextStyle(
                     color: constantColors.blueColor,
                     fontWeight: FontWeight.bold,
@@ -44,38 +43,20 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut().whenComplete(() {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    PageTransition(
-                        child: LandingPage(),
-                        type: PageTransitionType.bottomToTop),
-                    (route) => false);
-              });
-            },
-            icon: Icon(
-              Icons.exit_to_app,
-              color: constantColors.darkColor,
-            ),
-          ),
-        ],
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: Icon(
-            Icons.settings,
+            Icons.arrow_back_ios,
             color: constantColors.darkColor,
           ),
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection('posts')
-            .orderBy('time', descending: true)
+            .doc(userUid)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -83,13 +64,13 @@ class Profile extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            //userData = snapshot.data.docs;
+            userData = snapshot.data!.data();
             return CustomScrollView(
               slivers: [
-                Provider.of<ProfileHelpers>(context, listen: false)
-                    .infoContainerv2(context),
-                Provider.of<ProfileHelpers>(context, listen: false)
-                    .myPosts(context, snapshot),
+                Provider.of<BaseProfileHelpers>(context, listen: false)
+                    .infoContainer(context, userData),
+                Provider.of<BaseProfileHelpers>(context, listen: false)
+                    .posts(context, snapshot.data!.data()),
               ],
             );
           }

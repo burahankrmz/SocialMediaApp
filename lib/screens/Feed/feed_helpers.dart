@@ -10,6 +10,7 @@ import 'package:like_button/like_button.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/screens/PostComments/post_comments.dart';
+import 'package:project2_social_media/screens/Profile/profile_otherusers.dart';
 import 'package:project2_social_media/utils/post_options.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
 import 'package:provider/provider.dart';
@@ -92,9 +93,21 @@ class FeedHelpers with ChangeNotifier {
                             leading: Material(
                               color: Colors.transparent,
                               elevation: 15.0,
-                              child: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                  snapshot.data!.docs[index]['userimage'],
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileOtherUsers(
+                                                  userUid:
+                                                      snapshot.data!.docs[index]
+                                                          ['useruid'])));
+                                },
+                                child: CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    snapshot.data!.docs[index]['userimage'],
+                                  ),
                                 ),
                               ),
                             ),
