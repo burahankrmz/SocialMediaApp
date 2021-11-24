@@ -1,6 +1,38 @@
-#Social Media App
 
-I used Flutter Framework and Firebase.
+
+  
+# SocialMedia app with Flutter
+
+In this mobile application, users can communicate with peoples. 
+
+## Tech Stack
+- Developed with **Flutter**
+- Used **Provider** for state management
+- Used **Firebase** for backend
+
+## Features
+
+- You can register/login with your mail or google account. 
+- You can follow other peoples and other peoples can follow you.
+- You can upload post from gallery or camera.
+- You will have own profile and you can see other peoples profile.
+- You can like or comments posts.
+
+## For Development
+
+Firstly, you make sure that doing this steps. https://docs.flutter.dev/get-started/install
+
+Let's pass to start app after follow link at the top.
+
+- Runs the app in the development mode.
+
+```
+Open codes from Visual Studio Code or Android Studio IDE. Click run button.
+```
+And you will see app on simulator.
+
+
+#Some Photos From Application
 
 <div align="start">
     <img src="https://user-images.githubusercontent.com/76684491/143051304-eb8d33d1-7b62-4531-8dd1-60eacfe4d795.png" width="200px"</img>
