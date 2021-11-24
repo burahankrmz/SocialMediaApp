@@ -113,5 +113,20 @@ class FirebaseOperations with ChangeNotifier {
     });
   }
 
-  
+  Future removeFollowing(userData) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('following')
+        .doc(userData['useruid'])
+        .delete()
+        .whenComplete(() async {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc(userData['useruid'])
+          .collection('followers')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .delete();
+    });
+  }
 }

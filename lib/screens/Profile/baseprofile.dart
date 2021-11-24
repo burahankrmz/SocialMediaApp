@@ -80,18 +80,14 @@ class BaseProfile extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            //userData = snapshot.data.docs;
-            //userData = snapshot.data.docs;
+
             return CustomScrollView(
               slivers: [
                 Provider.of<BaseProfileHelpers>(context, listen: false)
-                    .infoContainer(context, snapshot.data!.data()),
+                    .infoContainer(context, snapshot.data!.data(),'xd'),
                 Provider.of<BaseProfileHelpers>(context, listen: false)
                     .posts(context, snapshot.data!.data()),
-                // Provider.of<ProfileHelpers>(context, listen: false)
-                //     .infoContainerv2(context, snapshot.data!.docs[0]),
-                // Provider.of<ProfileHelpers>(context, listen: false)
-                //     .myPosts(context, snapshot),
+
               ],
             );
           }
@@ -101,21 +97,4 @@ class BaseProfile extends StatelessWidget {
   }
 }
 
-/*
-StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(FirebaseAuth.instance.currentUser!.uid)
-              .collection('posts')
-              .orderBy('time', descending: true)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            }
-            else {
-              snapshot.data.
-            }
-          },
-        ));
-*/
+

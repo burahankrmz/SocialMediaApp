@@ -2,12 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/screens/Feed/feed_helpers.dart';
+import 'package:project2_social_media/screens/FollowPage/followpage_helpers.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_services.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/screens/PostComments/postcomments_helper.dart';
 import 'package:project2_social_media/screens/Profile/baseprofile_helpers.dart';
+import 'package:project2_social_media/screens/Profile/profile_otherusers_helpers.dart';
 import 'package:project2_social_media/screens/Profile/profileinfohelpers.dart';
 import 'package:project2_social_media/services/authentication.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
@@ -30,7 +32,6 @@ class MyApp extends StatelessWidget {
   );
   final TextButtonThemeData textButtonThemeData = TextButtonThemeData(
     style: ButtonStyle(
-      //enableFeedback: true,
       overlayColor: MaterialStateProperty.resolveWith<Color?>(
         (Set<MaterialState> states) {
           if (states.contains(MaterialState.hovered)) {
@@ -57,14 +58,11 @@ class MyApp extends StatelessWidget {
           textButtonTheme: textButtonThemeData,
           colorScheme: theme.colorScheme.copyWith(
             secondary: constantColors.blueColor,
-            //onPrimary: constantColors.blueGreyColor
-            //primary: constantColors.blueGreyColor,
           ),
           canvasColor: constantColors.whiteColor,
           scaffoldBackgroundColor: constantColors.whiteColor,
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
-            //Color(0xff040307),
           ),
         ),
       ),
@@ -81,7 +79,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PostCommentsHelper()),
         ChangeNotifierProvider(create: (_) => ProfileInfoHelpers()),
         ChangeNotifierProvider(create: (_) => BaseProfileHelpers()),
-
+        ChangeNotifierProvider(create: (_) => FollowPageHelpers()),
+        ChangeNotifierProvider(create: (_) => ProfileOtherUsersHelpers()),
       ],
     );
   }

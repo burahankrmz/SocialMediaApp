@@ -13,7 +13,7 @@ import 'package:project2_social_media/screens/Profile/profileinfohelpers.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
 
-class BaseProfileHelpers with ChangeNotifier {
+class ProfileOtherUsersHelpers with ChangeNotifier {
   ConstantColors constantColors = ConstantColors();
   dynamic userData;
   dynamic userNullCheckData;
@@ -47,7 +47,7 @@ class BaseProfileHelpers with ChangeNotifier {
                 buildFollowingTextButton(context, data),
               ],
             ),
-            buildProfileButtons(context),
+            buildProfileButtonsv2(context),
             buildDivider(),
           ],
         ),
@@ -156,10 +156,33 @@ class BaseProfileHelpers with ChangeNotifier {
     );
   }
 
-  Padding buildProfileButtons(BuildContext context) {
+  Widget buildProfileButtonsv2(BuildContext context) {
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('following')
+            .doc(userData['useruid'])
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else {
+            return snapshot.data!.exists == true
+                ? buildProfileButtons(
+                    context, 'Following', constantColors.blueColor)
+                : buildProfileButtons(
+                    context, 'Follow', constantColors.whiteColor);
+          }
+        });
+  }
+
+  Padding buildProfileButtons(
+      BuildContext context, String areyoufollowing, Color btnColor) {
     return Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: buildEditProfileButton(context));
+      padding: const EdgeInsets.only(top: 20.0),
+      child: buildFollowButton(context, userData, areyoufollowing, btnColor),
+    );
   }
 
   Text buildUserEmailText() {
@@ -282,15 +305,19 @@ class BaseProfileHelpers with ChangeNotifier {
   MaterialButton buildFollowButton(
     BuildContext context,
     userData,
+    String areyoufollowing,
+    Color btnColor,
   ) {
     return MaterialButton(
-        color: constantColors.whiteColor,
-        elevation: 3.0,
-        child: const Text(
-          'Follow',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        onPressed: () {
+      minWidth: MediaQuery.of(context).size.width * 0.9,
+      color: btnColor,
+      elevation: 3.0,
+      child: Text(
+        areyoufollowing,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        if (areyoufollowing == 'Follow') {
           Provider.of<FirebaseOperations>(context, listen: false).followUser(
             userData['useruid'],
             FirebaseAuth.instance.currentUser!.uid,
@@ -317,6 +344,11 @@ class BaseProfileHelpers with ChangeNotifier {
               'time': Timestamp.now()
             },
           );
-        });
+        } else {
+          Provider.of<FirebaseOperations>(context, listen: false)
+              .removeFollowing(userData);
+        }
+      },
+    );
   }
 }

@@ -17,8 +17,27 @@ class ProfileInfoHelpers with ChangeNotifier {
           } else {
             return Text(
               snapshot.data!.docs.length.toString(),
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black),
+            );
+          }
+        });
+  }
+
+  Widget followersText(BuildContext context, userData, String docName,String name) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(userData)
+            .collection(docName)
+            .orderBy('time')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else {
+            return Text(
+              snapshot.data!.docs.length.toString() + name,
             );
           }
         });

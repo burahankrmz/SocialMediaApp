@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
+import 'package:project2_social_media/screens/Profile/profile_otherusers_helpers.dart';
 import 'package:provider/provider.dart';
 
 import 'baseprofile_helpers.dart';
@@ -67,8 +68,8 @@ class ProfileOtherUsers extends StatelessWidget {
             userData = snapshot.data!.data();
             return CustomScrollView(
               slivers: [
-                Provider.of<BaseProfileHelpers>(context, listen: false)
-                    .infoContainer(context, userData),
+                Provider.of<ProfileOtherUsersHelpers>(context, listen: false)
+                    .infoContainer(context, userData,userUid),
                 Provider.of<BaseProfileHelpers>(context, listen: false)
                     .posts(context, snapshot.data!.data()),
               ],
