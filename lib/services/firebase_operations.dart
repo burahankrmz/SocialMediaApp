@@ -17,26 +17,28 @@ class FirebaseOperations with ChangeNotifier {
   Future uploadUserAvatar(BuildContext context) async {
     Reference imageReference = FirebaseStorage.instance.ref().child(
         'userProfileAvatar/${Provider.of<LandingUtils>(context, listen: false).getUserAvatar.path}/${TimeOfDay.now()}');
-    imageUploadTask = imageReference.putFile(
-        Provider.of<LandingUtils>(context, listen: false).getUserAvatar);
+    imageUploadTask = imageReference
+        .putFile(Provider.of<LandingUtils>(context, listen: false).userAvatar!);
     await imageUploadTask.whenComplete(() {
       debugPrint('image uploaded');
     });
-    imageReference.getDownloadURL().then((url) {
-      debugPrint(url);
-      Provider.of<LandingUtils>(context, listen: false).userAvatarUrl =
-          url.toString();
-
-      debugPrint('the user profile avatar url => $url');
-      notifyListeners();
-    });
+    Provider.of<LandingUtils>(context, listen: false).userAvatarUrl =
+        await imageReference.getDownloadURL();
+    debugPrint(Provider.of<LandingUtils>(context, listen: false)
+        .userAvatarUrl
+        .toString());
+    debugPrint('OLDU GIBI NE DIYON');
+    notifyListeners();
   }
 
   Future createUserCollection(BuildContext context, dynamic data) async {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
-        .set(data);
+        .set(data)
+        .whenComplete(() {
+      debugPrint('created Succesfully');
+    });
   }
 
   Future createGoogleUserCollection(String googleUid, dynamic data) async {

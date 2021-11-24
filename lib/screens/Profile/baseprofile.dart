@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
-import 'package:project2_social_media/screens/LandingPage/landing_page.dart';
+import 'package:project2_social_media/screens/Authentication/Login/loginpage.dart';
 import 'package:project2_social_media/screens/Profile/baseprofile_helpers.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +50,7 @@ class BaseProfile extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                     context,
                     PageTransition(
-                        child: LandingPage(),
+                        child: const LoginPage(),
                         type: PageTransitionType.bottomToTop),
                     (route) => false);
               });
@@ -80,14 +80,12 @@ class BaseProfile extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-
             return CustomScrollView(
               slivers: [
                 Provider.of<BaseProfileHelpers>(context, listen: false)
-                    .infoContainer(context, snapshot.data!.data(),'xd'),
+                    .infoContainer(context, snapshot.data!.data(), 'xd'),
                 Provider.of<BaseProfileHelpers>(context, listen: false)
                     .posts(context, snapshot.data!.data()),
-
               ],
             );
           }
@@ -96,5 +94,3 @@ class BaseProfile extends StatelessWidget {
     );
   }
 }
-
-

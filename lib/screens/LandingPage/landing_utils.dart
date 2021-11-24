@@ -64,7 +64,7 @@ class LandingUtils with ChangeNotifier {
                               .whenComplete(() {
                             Navigator.pop(context);
                             Provider.of<LandingService>(context, listen: false)
-                                .showUserAvatar(context);
+                                .showUserAvatarv2(context);
                           });
                         }),
                     MaterialButton(
@@ -80,8 +80,9 @@ class LandingUtils with ChangeNotifier {
                           pickUserAvatar(context, ImageSource.camera)
                               .whenComplete(() {
                             Navigator.pop(context);
+
                             Provider.of<LandingService>(context, listen: false)
-                                .showUserAvatar(context);
+                                .showUserAvatarv2(context);
                           });
                         })
                   ],

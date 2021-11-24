@@ -283,7 +283,7 @@ class LandingService with ChangeNotifier {
                               Provider.of<FirebaseOperations>(context,
                                       listen: false)
                                   .createUserCollection(context, {
-                                    '':userPasswordController.text,
+                                '': userPasswordController.text,
                                 'useruid': Provider.of<Authentication>(context,
                                         listen: false)
                                     .getUserUid,
@@ -395,6 +395,79 @@ class LandingService with ChangeNotifier {
                             .uploadUserAvatar(context)
                             .whenComplete(() {
                           signInSheet(context);
+                        });
+                      },
+                      child: Text(
+                        'Confirm Image',
+                        style: TextStyle(
+                          color: constantColors.blueColor,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          decorationColor: constantColors.whiteColor,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  showUserAvatarv2(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.30,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: constantColors.blueGreyColor,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 150.0),
+                  child: Divider(
+                    thickness: 4.0,
+                    color: constantColors.whiteColor,
+                  ),
+                ),
+                CircleAvatar(
+                  radius: 60.0,
+                  backgroundColor: constantColors.transperant,
+                  backgroundImage: FileImage(
+                    Provider.of<LandingUtils>(context, listen: false)
+                        .getUserAvatar,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        Provider.of<LandingUtils>(context, listen: false)
+                            .pickUserAvatar(context, ImageSource.camera);
+                      },
+                      child: Text(
+                        'Reselect',
+                        style: TextStyle(
+                          color: constantColors.whiteColor,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          decorationColor: constantColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        Provider.of<FirebaseOperations>(context, listen: false)
+                            .uploadUserAvatar(context)
+                            .whenComplete(() {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         });
                       },
                       child: Text(

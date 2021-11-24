@@ -143,7 +143,7 @@ class BaseProfileHelpers with ChangeNotifier {
           bottom: 5.0,
         ),
         child: const Text(
-          'My Posts',
+          'Posts',
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
       ),
