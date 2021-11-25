@@ -18,7 +18,7 @@ class LandingUtils with ChangeNotifier {
     pickedUserAvatar == null
         ? debugPrint('Select image')
         : userAvatar = File(pickedUserAvatar.path);
-    debugPrint(userAvatar!.path);
+    //debugPrint(userAvatar!.path);
 
     userAvatar != null
         ? Provider.of<LandingService>(context, listen: false)
@@ -65,7 +65,8 @@ class LandingUtils with ChangeNotifier {
                             Navigator.pop(context);
                             Provider.of<LandingService>(context, listen: false)
                                 .showUserAvatarv2(context);
-                          });
+                          }).onError((error, stackTrace) =>
+                                  Navigator.pop(context));
                         }),
                     MaterialButton(
                         color: constantColors.blueColor,

@@ -12,7 +12,6 @@ extension NumberExtension on BuildContext {
   double get mediumValue => dynamicHeight(0.03);
   double get highValue => dynamicHeight(0.05);
 }
-
 extension PaddingExtension on BuildContext {
   EdgeInsets dynamicVerticalPadding(double val) =>
       EdgeInsets.symmetric(vertical: dynamicHeight(val));

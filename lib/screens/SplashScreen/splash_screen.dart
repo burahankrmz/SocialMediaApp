@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
@@ -38,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
         () => Navigator.pushReplacement(
           context,
           PageTransition(
-              //child: LandingPage(), type: PageTransitionType.leftToRight),
               child: const LoginPage(),
               type: PageTransitionType.leftToRight),
         ),

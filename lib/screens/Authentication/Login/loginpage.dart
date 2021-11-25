@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +23,10 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPasswordController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  late String girdimi;
   ConstantColors constantColors = ConstantColors();
   bool pwSecure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,28 +42,8 @@ class _LoginPageState extends State<LoginPage> {
                 buildLoginBar(),
                 buildGoogleLoginButton(),
                 buildDivider(),
-                RichText(
-                  text: TextSpan(
-                      text: 'Social',
-                      style: TextStyle(
-                        color: constantColors.darkColor,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.0,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Media',
-                          style: TextStyle(
-                            color: constantColors.blueColor,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 35.0,
-                          ),
-                        ),
-                      ]),
-                ),
-                buildForm(userEmailController, constantColors),
+                buildSocialMediaText(),
+                buildForm(),
                 buildDivider(),
                 buildAccountText(),
                 buildSignupTextButton(),
@@ -74,6 +55,30 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  RichText buildSocialMediaText() {
+    return RichText(
+      text: TextSpan(
+          text: 'Social',
+          style: TextStyle(
+            color: constantColors.darkColor,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: 30.0,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Media',
+              style: TextStyle(
+                color: constantColors.blueColor,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                fontSize: 35.0,
+              ),
+            ),
+          ]),
+    );
+  }
+
   SizedBox buildSignupTextButton() {
     return SizedBox(
       height: context.dynamicHeight(0.07),
@@ -82,7 +87,8 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
             context,
             PageTransition(
-                child: const RegisterPage(), type: PageTransitionType.rightToLeft),
+                child: const RegisterPage(),
+                type: PageTransitionType.rightToLeft),
           );
         },
         child: const Text(
@@ -103,8 +109,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Form buildForm(TextEditingController userEmailController,
-      ConstantColors constantColors) {
+  Form buildForm() {
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: SizedBox(
@@ -173,21 +178,27 @@ class _LoginPageState extends State<LoginPage> {
               height: context.dynamicHeight(0.06),
               width: context.dynamicHeight(1),
               child: MaterialButton(
-                onPressed: () {
+                onPressed: () async {
                   if (userEmailController.text.isNotEmpty &&
                       userPasswordController.text.isNotEmpty) {
                     if (EmailValidator.validate(userEmailController.text)) {
-                      Provider.of<Authentication>(context, listen: false)
-                          .logIntoAccount(userEmailController.text,
+                      await Provider.of<Authentication>(context, listen: false)
+                          .logIntoAccountv3(userEmailController.text,
                               userPasswordController.text)
-                          .whenComplete(() {
+                          .then((value) => girdimi = value);
+
+                      if (girdimi == 'user-not-found') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Wrong Email User Not Found')));
+                      } else if (girdimi == 'wrong-password') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Wrong Password Try Again')));
+                      } else if (girdimi == 'signedin') {
                         Provider.of<FirebaseOperations>(context, listen: false)
                             .initUserData(context)
                             .whenComplete(() {
-                          Timer(const Duration(seconds: 2), () {
-                            userEmailController.clear();
-                            userPasswordController.clear();
-                          });
                           Navigator.pushAndRemoveUntil(
                               context,
                               PageTransition(
@@ -195,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                                   type: PageTransitionType.bottomToTop),
                               (route) => false);
                         });
-                      });
+                      }
                     } else {
                       warningText(context, 'Wrong Email Format');
                     }

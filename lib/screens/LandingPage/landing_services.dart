@@ -435,53 +435,82 @@ class LandingService with ChangeNotifier {
                     color: constantColors.whiteColor,
                   ),
                 ),
-                CircleAvatar(
-                  radius: 60.0,
-                  backgroundColor: constantColors.transperant,
-                  backgroundImage: FileImage(
-                    Provider.of<LandingUtils>(context, listen: false)
-                        .getUserAvatar,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        Provider.of<LandingUtils>(context, listen: false)
-                            .pickUserAvatar(context, ImageSource.camera);
-                      },
-                      child: Text(
-                        'Reselect',
-                        style: TextStyle(
-                          color: constantColors.whiteColor,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          decorationColor: constantColors.whiteColor,
+                Provider.of<LandingUtils>(context, listen: true).userAvatar !=
+                        null
+                    ? CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: constantColors.transperant,
+                        backgroundImage: FileImage(
+                          Provider.of<LandingUtils>(context, listen: false)
+                              .getUserAvatar,
+                        ),
+                      )
+                    : CircleAvatar(
+                        radius: 50.0,
+                        backgroundColor: Colors.grey,
+                        child: Icon(
+                          Icons.photo_size_select_actual_rounded,
+                          color: Colors.white,
+                          size: 65.0,
                         ),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        Provider.of<FirebaseOperations>(context, listen: false)
-                            .uploadUserAvatar(context)
-                            .whenComplete(() {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Text(
-                        'Confirm Image',
-                        style: TextStyle(
-                          color: constantColors.blueColor,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          decorationColor: constantColors.whiteColor,
+                Provider.of<LandingUtils>(context, listen: true).userAvatar !=
+                        null
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          MaterialButton(
+                            onPressed: () {
+                              Provider.of<LandingUtils>(context, listen: false)
+                                  .pickUserAvatar(context, ImageSource.camera);
+                            },
+                            child: Text(
+                              'Reselect',
+                              style: TextStyle(
+                                color: constantColors.whiteColor,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                decorationColor: constantColors.whiteColor,
+                              ),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              Provider.of<FirebaseOperations>(context,
+                                      listen: false)
+                                  .uploadUserAvatar(context)
+                                  .whenComplete(() {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              });
+                            },
+                            child: Text(
+                              'Confirm Image',
+                              style: TextStyle(
+                                color: constantColors.blueColor,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                decorationColor: constantColors.whiteColor,
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    : MaterialButton(
+                        onPressed: () {
+                          Provider.of<LandingUtils>(context, listen: false)
+                              .pickUserAvatar(context, ImageSource.camera);
+                        },
+                        child: Text(
+                          'Please Choose A Profile Picture',
+                          style: TextStyle(
+                            color: constantColors.whiteColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationColor: constantColors.whiteColor,
+                          ),
                         ),
                       ),
-                    )
-                  ],
-                ),
               ],
             ),
           );

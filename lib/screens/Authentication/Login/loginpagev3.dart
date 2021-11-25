@@ -1,23 +1,24 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/extensions/context_extension.dart';
+import 'package:project2_social_media/screens/Authentication/Register/register.dart';
 import 'package:project2_social_media/screens/HomePage/homepage.dart';
-import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/services/authentication.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class LoginPagev3 extends StatefulWidget {
+  const LoginPagev3({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _LoginPagev3State createState() => _LoginPagev3State();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPagev3State extends State<LoginPagev3> {
   TextStyle appBarTextStyle = const TextStyle(
       fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0);
   TextEditingController userEmailController = TextEditingController();
@@ -25,7 +26,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController userNameController = TextEditingController();
   ConstantColors constantColors = ConstantColors();
   bool pwSecure = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,13 +38,34 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildRegisterBar(),
-                buildUserImagePick(),
+                buildLoginBar(),
+                buildGoogleLoginButton(),
                 buildDivider(),
-                buildForm(),
+                RichText(
+                  text: TextSpan(
+                      text: 'Social',
+                      style: TextStyle(
+                        color: constantColors.darkColor,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Media',
+                          style: TextStyle(
+                            color: constantColors.blueColor,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 35.0,
+                          ),
+                        ),
+                      ]),
+                ),
+                buildForm(userEmailController, constantColors),
                 buildDivider(),
-                buildAlreadyAccountText(),
-                buildLoginTextButton(),
+                buildAccountText(),
+                buildSignupTextButton(),
               ],
             ),
           ),
@@ -53,96 +74,45 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  SizedBox buildLoginTextButton() {
+  SizedBox buildSignupTextButton() {
     return SizedBox(
       height: context.dynamicHeight(0.07),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            PageTransition(
+                child: const RegisterPage(), type: PageTransitionType.rightToLeft),
+          );
+        },
         child: const Text(
-          'Log in',
+          'Sign up',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
         ),
       ),
     );
   }
 
-  SizedBox buildAlreadyAccountText() {
+  SizedBox buildAccountText() {
     return SizedBox(
       height: context.dynamicHeight(0.04),
       child: const Text(
-        'Already have an account?',
+        'Dont have an account?',
         style: TextStyle(fontSize: 18),
       ),
     );
   }
 
-  SizedBox buildUserImagePick() {
-    return SizedBox(
-      child: Provider.of<LandingUtils>(context, listen: true).userAvatar != null
-          ? CircleAvatar(
-              backgroundImage: FileImage(
-                  Provider.of<LandingUtils>(context, listen: false)
-                      .getUserAvatar),
-              backgroundColor: constantColors.redColor,
-              radius: 60.0,
-            )
-          : GestureDetector(
-              onTap: () {
-                Provider.of<LandingUtils>(context, listen: false)
-                    .selectAvatarOptionsSheet(context);
-              },
-              child: Column(
-                children: const [
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundColor: Colors.grey,
-                    child: Icon(
-                      Icons.photo_size_select_actual_rounded,
-                      color: Colors.white,
-                      size: 65.0,
-                    ),
-                  ),
-                  Text(
-                    'Please Select Profile Image',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-            ),
-    );
-  }
-
-  Form buildForm() {
+  Form buildForm(TextEditingController userEmailController,
+      ConstantColors constantColors) {
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: SizedBox(
-        height: context.dynamicHeight(0.5),
+        height: context.dynamicHeight(0.40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              'Name',
-              style: appBarTextStyle.copyWith(fontSize: 15),
-            ),
-            TextField(
-              controller: userNameController,
-              decoration: InputDecoration(
-                contentPadding: context.paddingAllLow,
-                hintText: 'Enter Name...',
-                hintStyle: TextStyle(
-                    color: constantColors.greyColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-              ),
-              style: TextStyle(color: constantColors.darkColor, fontSize: 15.0),
-            ),
             Text(
               'Email',
               style: appBarTextStyle.copyWith(fontSize: 15),
@@ -172,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
               'Password',
               style: appBarTextStyle.copyWith(fontSize: 15),
             ),
-            TextField(
+            TextFormField(
               obscureText: pwSecure,
               controller: userPasswordController,
               decoration: InputDecoration(
@@ -204,54 +174,37 @@ class _RegisterPageState extends State<RegisterPage> {
               width: context.dynamicHeight(1),
               child: MaterialButton(
                 onPressed: () {
-                  if (Provider.of<LandingUtils>(context, listen: false)
-                          .userAvatar ==
-                      null) {
-                    warningText(context, 'Please Choose Profile Picture First');
-                  } else if (userEmailController.text.isNotEmpty &&
-                      userPasswordController.text.isNotEmpty &&
-                      userNameController.text.isNotEmpty) {
-                    Provider.of<Authentication>(context, listen: false)
-                        .createAccount(userEmailController.text,
-                            userPasswordController.text)
-                        .whenComplete(() {
-                      debugPrint('Creating Firebase Account');
-                      debugPrint(
-                          Provider.of<LandingUtils>(context, listen: false)
-                              .userAvatarUrl);
-
-                      debugPrint(
-                          Provider.of<Authentication>(context, listen: false)
-                              .getUserUid);
-
-                      Provider.of<FirebaseOperations>(context, listen: false)
-                          .createUserCollection(context, {
-                        'useruid':
-                            Provider.of<Authentication>(context, listen: false)
-                                .getUserUid,
-                        'useremail': userEmailController.text,
-                        'username': userNameController.text,
-                        'userimage':
-                            Provider.of<LandingUtils>(context, listen: false)
-                                .userAvatarUrl,
-                      });
-                    }).whenComplete(() {
-                      Provider.of<FirebaseOperations>(context, listen: false)
-                          .initUserData(context)
+                  if (userEmailController.text.isNotEmpty &&
+                      userPasswordController.text.isNotEmpty) {
+                    if (EmailValidator.validate(userEmailController.text)) {
+                      Provider.of<Authentication>(context, listen: false)
+                          .logIntoAccount(userEmailController.text,
+                              userPasswordController.text)
                           .whenComplete(() {
-                        Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                                child: const HomePage(),
-                                type: PageTransitionType.bottomToTop));
+                        Provider.of<FirebaseOperations>(context, listen: false)
+                            .initUserData(context)
+                            .whenComplete(() {
+                          Timer(const Duration(seconds: 2), () {
+                            userEmailController.clear();
+                            userPasswordController.clear();
+                          });
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              PageTransition(
+                                  child: const HomePage(),
+                                  type: PageTransitionType.bottomToTop),
+                              (route) => false);
+                        });
                       });
-                    });
+                    } else {
+                      warningText(context, 'Wrong Email Format');
+                    }
                   } else {
-                    warningText(context, 'Fill all the data');
+                    warningText(context, 'Fill All The Data');
                   }
                 },
                 child: const Text(
-                  'Sign up',
+                  'Log in',
                   style: TextStyle(color: Colors.white),
                 ),
                 color: constantColors.blueColor,
@@ -314,33 +267,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget buildRegisterBar() {
+  Widget buildLoginBar() {
     return SizedBox(
-      height: context.dynamicHeight(0.08),
+      height: context.dynamicHeight(0.15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Sign up',
+            'Log in',
             style: appBarTextStyle,
-          ),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(
-                    25.0,
-                  ),
-                ),
-              ),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              Icons.close,
-              color: Colors.grey,
-            ),
           ),
         ],
       ),

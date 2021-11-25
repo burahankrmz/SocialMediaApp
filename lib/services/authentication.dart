@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
 
@@ -9,7 +10,6 @@ class Authentication with ChangeNotifier {
 
   String? userUid;
   String get getUserUid => userUid!;
-
   Future logIntoAccount(String email, String password) async {
     UserCredential userCredential = await firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
@@ -22,9 +22,33 @@ class Authentication with ChangeNotifier {
     notifyListeners();
   }
 
+
+  Future<String> logIntoAccountv3(String email, String password) async {
+    try {
+      final User user = (await firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password))
+          .user!;
+      //User user = userCredential.user!;
+      userUid = user.uid;
+      debugPrint(userUid);
+      notifyListeners();
+      return 'signedin';
+      //ScaffoldSnackbar.of(context).show('${user.email} signed in');
+    } on FirebaseAuthException catch (e) {
+      //print('Failed with error code: ${e.code}');
+      //print(e.message);
+      if (e.code == "wrong-password") {
+        return 'wrong-password';
+      } else {
+        return 'user-not-found';
+      }
+    }
+  }
+
   Future createAccount(String email, String password) async {
     UserCredential userCredential = await firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
+
     User user = userCredential.user!;
     userUid = user.uid;
     debugPrint(userUid);
@@ -48,7 +72,7 @@ class Authentication with ChangeNotifier {
         await firebaseAuth.signInWithCredential(authCredential);
     final User? user = userCredential.user;
     userUid = user!.uid;
-    FirebaseOperations().createGoogleUserCollection(userUid!,{
+    FirebaseOperations().createGoogleUserCollection(userUid!, {
       'useruid': userUid,
       'useremail': user.email,
       'username': user.displayName,
