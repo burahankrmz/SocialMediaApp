@@ -37,8 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
         () => Navigator.pushReplacement(
           context,
           PageTransition(
-              child: const LoginPage(),
-              type: PageTransitionType.leftToRight),
+              child: const LoginPage(), type: PageTransitionType.leftToRight),
         ),
       );
     }
@@ -49,13 +48,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: constantColors.darkColor,
+      backgroundColor: constantColors.whiteColor,
       body: Center(
         child: RichText(
           text: TextSpan(
               text: 'Social',
               style: TextStyle(
-                color: constantColors.whiteColor,
+                color: constantColors.darkColor,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
                 fontSize: 30.0,
