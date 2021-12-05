@@ -53,9 +53,11 @@ class PostCommentsHelper with ChangeNotifier {
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
-                const Text(
-                  '5 min',
-                  style: TextStyle(
+                 Text(
+                  PostFunctions().showTimeAgo(
+                    doc['time'],
+                  ),
+                  style: const TextStyle(
                     fontSize: 10.0,
                     color: Colors.grey,
                   ),

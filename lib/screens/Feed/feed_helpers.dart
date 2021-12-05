@@ -119,16 +119,6 @@ class FeedHelpers with ChangeNotifier {
                                 : null;
                           }
                         }
-                        // userDatav2.add(userData[0]);
-                        // userDatav2.add(userData[1]);
-                        // userDatav2.add(userData[10]);
-                        //debugPrint(userDatav2[0]['useruid']);
-                        //debugPrint('UserDatav2' +
-                           // '   ' +
-                            //userDatav2.length.toString());
-                        //debugPrint(userDatav2[0]['caption']);
-                        //debugPrint(count.toString());
-                        //debugPrint(userData.length.toString());
                         return userDatav2.isNotEmpty
                             ? ListView.builder(
                                 physics: const BouncingScrollPhysics(),
