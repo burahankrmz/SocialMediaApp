@@ -72,12 +72,6 @@ class PostFunctions with ChangeNotifier {
   }
 
   Future<bool?> onLikeButtonTapped(bool isLiked) async {
-    /// send your request here
-    // final bool success= await sendRequest();
-
-    /// if failed, you can do nothing
-    // return success? !isLiked:isLiked;
-
     return !isLiked;
   }
 

@@ -10,20 +10,8 @@ class Authentication with ChangeNotifier {
 
   String? userUid;
   String get getUserUid => userUid!;
-  Future logIntoAccount(String email, String password) async {
-    UserCredential userCredential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .whenComplete(() {
-      debugPrint(FirebaseAuth.instance.currentUser!.uid);
-    });
-    User user = userCredential.user!;
-    userUid = user.uid;
-    debugPrint(userUid);
-    notifyListeners();
-  }
 
-
-  Future<String> logIntoAccountv3(String email, String password) async {
+  Future<String> logIntoAccount(String email, String password) async {
     try {
       final User user = (await firebaseAuth.signInWithEmailAndPassword(
               email: email, password: password))

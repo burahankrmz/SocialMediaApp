@@ -54,6 +54,3 @@ class FollowPageHelpers with ChangeNotifier {
     );
   }
 }
-
-//Text(userFollowingData[index]['username'])
- //Image.network(userFollowingData[index]['userimage'])

@@ -183,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                       userPasswordController.text.isNotEmpty) {
                     if (EmailValidator.validate(userEmailController.text)) {
                       await Provider.of<Authentication>(context, listen: false)
-                          .logIntoAccountv3(userEmailController.text,
+                          .logIntoAccount(userEmailController.text,
                               userPasswordController.text)
                           .then((value) => girdimi = value);
 

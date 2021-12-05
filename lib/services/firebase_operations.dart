@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
+
 import 'package:project2_social_media/services/authentication.dart';
 import 'package:provider/provider.dart';
 
@@ -17,43 +18,6 @@ class FirebaseOperations with ChangeNotifier {
   String get getInitUserImage => initUserImage!;
   String get getInitUserName => initUserName!;
   String get getInitUserEmail => initUserEmail!;
-
-  Future initFollowingList() async {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('following')
-        .get()
-        .then((value) {
-      for (int i = 0; i < value.docs.length; i++) {
-        followers.add(value.docs[i]['useruid']);
-        //debugPrint(value.docs[i]['useruid']);
-      }
-      debugPrint(followers[0]);
-      //debugPrint(followers[0]);
-      notifyListeners();
-    });
-  }
-
-
-
-  Future<List> initFollowingListv2() async {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('following')
-        .get()
-        .then((value) {
-      for (int i = 0; i < value.docs.length; i++) {
-        followers.add(value.docs[i]['useruid'].toString());
-        //debugPrint(value.docs[i]['useruid']);
-      }
-      debugPrint(followers[0]);
-      //debugPrint(followers[0]);
-      notifyListeners();
-      return followers;
-    });
-  }
 
   Future uploadUserAvatar(BuildContext context) async {
     Reference imageReference = FirebaseStorage.instance.ref().child(

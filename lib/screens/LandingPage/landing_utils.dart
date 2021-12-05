@@ -18,12 +18,6 @@ class LandingUtils with ChangeNotifier {
     pickedUserAvatar == null
         ? debugPrint('Select image')
         : userAvatar = File(pickedUserAvatar.path);
-    //debugPrint(userAvatar!.path);
-
-    userAvatar != null
-        ? Provider.of<LandingService>(context, listen: false)
-            .showUserAvatar(context)
-        : debugPrint('image upload error');
     notifyListeners();
   }
 
@@ -62,7 +56,7 @@ class LandingUtils with ChangeNotifier {
                         onPressed: () {
                           pickUserAvatar(context, ImageSource.gallery)
                               .whenComplete(() {
-                            Navigator.pop(context);
+
                             Provider.of<LandingService>(context, listen: false)
                                 .showUserAvatarv2(context);
                           }).onError((error, stackTrace) =>

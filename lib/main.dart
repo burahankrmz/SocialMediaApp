@@ -4,7 +4,6 @@ import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/screens/Feed/feed_helpers.dart';
 import 'package:project2_social_media/screens/FollowPage/followpage_helpers.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
-import 'package:project2_social_media/screens/LandingPage/landing_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_services.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/screens/PostComments/postcomments_helper.dart';
@@ -67,7 +66,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
       providers: [
-        ChangeNotifierProvider(create: (_) => LandingHelpers()),
         ChangeNotifierProvider(create: (_) => Authentication()),
         ChangeNotifierProvider(create: (_) => LandingService()),
         ChangeNotifierProvider(create: (_) => FirebaseOperations()),
