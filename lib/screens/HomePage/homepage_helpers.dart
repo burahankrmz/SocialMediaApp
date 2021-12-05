@@ -14,13 +14,12 @@ class HomePageHelpers with ChangeNotifier {
     return CustomNavigationBar(
       currentIndex: index,
       bubbleCurve: Curves.bounceIn,
-      scaleCurve: Curves.decelerate,
       borderRadius: const Radius.circular(30.0),
       selectedColor: const Color(0xff040307),
       unSelectedColor: constantColors.greyColor,
       elevation: 100.0,
-      strokeColor: constantColors.darkColor,
-      scaleFactor: 0.3,
+      strokeColor: Colors.grey.shade300,
+      scaleFactor: 0.2,
       iconSize: 30.0,
       onTap: (value) {
         index = value;

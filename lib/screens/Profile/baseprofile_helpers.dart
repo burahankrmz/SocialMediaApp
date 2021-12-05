@@ -26,6 +26,7 @@ class BaseProfileHelpers with ChangeNotifier {
     userData = data;
     return SliverToBoxAdapter(
       child: Container(
+        color: Colors.white,
         width: MediaQuery.of(context).size.width,
         margin: const EdgeInsets.only(top: 4, bottom: 4),
         child: Column(
@@ -105,6 +106,7 @@ class BaseProfileHelpers with ChangeNotifier {
             },
             child: Container(
               decoration: BoxDecoration(
+                color: Colors.white,
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: CachedNetworkImageProvider(

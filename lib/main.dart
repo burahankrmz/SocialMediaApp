@@ -58,8 +58,9 @@ class MyApp extends StatelessWidget {
           colorScheme: theme.colorScheme.copyWith(
             secondary: constantColors.blueColor,
           ),
+
           canvasColor: constantColors.whiteColor,
-          scaffoldBackgroundColor: constantColors.whiteColor,
+          scaffoldBackgroundColor: Colors.grey.shade200,
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
           ),

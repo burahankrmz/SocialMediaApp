@@ -22,6 +22,7 @@ class _FollowPageState extends State<FollowPage> {
       initialIndex: widget.initialPageIndex,
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
             appBar: AppBar(
               elevation: 0,
               leading: IconButton(

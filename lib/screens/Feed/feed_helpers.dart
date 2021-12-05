@@ -13,6 +13,7 @@ import 'package:project2_social_media/screens/PostComments/post_comments.dart';
 import 'package:project2_social_media/screens/Profile/profile_otherusers.dart';
 import 'package:project2_social_media/utils/post_options.dart';
 import 'package:project2_social_media/utils/upload_post.dart';
+import 'package:project2_social_media/extensions/context_extension.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -66,6 +67,375 @@ class FeedHelpers with ChangeNotifier {
         ),
       ],
     );
+  }
+
+  Widget feedBoydResponsive(BuildContext context) {
+    return SafeArea(
+        child: Padding(
+      padding: context.paddingLowHorizontal,
+      child: ListView(
+        children: [
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection('following')
+                  .snapshots(),
+              builder: (context, followingList) {
+                if (followingList.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  followingv2.clear();
+                  for (int i = 0; i < followingList.data!.docs.length; i++) {
+                    followingv2.add(followingList.data!.docs[i]['useruid']);
+                  }
+                  return followingv2.isNotEmpty
+                      ? StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('posts')
+                              .orderBy('time', descending: true)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              List<QueryDocumentSnapshot<Object?>> userData =
+                                  snapshot.data!.docs;
+                              List<QueryDocumentSnapshot<Object?>> userDatav2 =
+                                  snapshot.data!.docs;
+                              userDatav2.clear();
+                              count = 0;
+                              for (int x = 0; x < followingv2.length; x++) {
+                                for (int y = 0; y < userData.length; y++) {
+                                  followingv2[x] == userData[y]['useruid']
+                                      ? userDatav2.add(userData[y])
+                                      : null;
+                                }
+                              }
+                              return userDatav2.isNotEmpty
+                                  ? GridView.builder(
+                                      shrinkWrap: true,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemCount: userDatav2.length,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 1,
+                                              childAspectRatio: 1,
+                                              // crossAxisSpacing: 12,
+                                              mainAxisSpacing: 10),
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0)),
+                                          child: Padding(
+                                            padding:
+                                                context.paddingHighHorizontal,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: ListTile(
+                                                    leading: GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    ProfileOtherUsers(
+                                                                        userUid:
+                                                                            userDatav2[index]['useruid'])));
+                                                      },
+                                                      child: CircleAvatar(
+                                                        backgroundImage:
+                                                            CachedNetworkImageProvider(
+                                                          userDatav2[index]
+                                                              ['userimage'],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    title: Text(
+                                                      userDatav2[index]
+                                                          ['username'],
+                                                      style: const TextStyle(
+                                                          fontSize: 13.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    subtitle: Text(
+                                                      PostFunctions()
+                                                          .showTimeAgo(
+                                                              userDatav2[index]
+                                                                  ['time']),
+                                                      style: const TextStyle(
+                                                        fontSize: 10.0,
+                                                      ),
+                                                    ),
+                                                    trailing: IconButton(
+                                                      onPressed: () {
+                                                        Provider.of<PostFunctions>(
+                                                                context,
+                                                                listen: false)
+                                                            .showPostOptions(
+                                                                context);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.more_horiz),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 6,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          userDatav2[index]
+                                                              ['postimage'],
+                                                      width: context
+                                                          .dynamicWidth(0.9),
+                                                      fit: BoxFit.cover,
+                                                      placeholder:
+                                                          (context, url) {
+                                                        return const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Padding(
+                                                    padding: context
+                                                        .dynamicVerticalPadding(
+                                                            0.01),
+                                                    child: Text(
+                                                      userDatav2[index]
+                                                          ['caption'],
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Row(
+                                                    children: [
+                                                      StreamBuilder<
+                                                              QuerySnapshot>(
+                                                          stream: FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'posts')
+                                                              .doc(snapshot
+                                                                          .data!
+                                                                          .docs[
+                                                                      index]
+                                                                  ['caption'])
+                                                              .collection(
+                                                                  'likes')
+                                                              .snapshots(),
+                                                          builder: (context,
+                                                              snapshotLikes) {
+                                                            if (snapshotLikes
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                              return const CircularProgressIndicator();
+                                                            } else {
+                                                              for (var snapshotfind
+                                                                  in snapshotLikes
+                                                                      .data!
+                                                                      .docs) {
+                                                                if (snapshotfind[
+                                                                        'useruid'] ==
+                                                                    FirebaseAuth
+                                                                        .instance
+                                                                        .currentUser!
+                                                                        .uid) {
+                                                                  return LikeButton(
+                                                                    onTap: (bool
+                                                                        isLiked) {
+                                                                      Provider.of<PostFunctions>(context, listen: false).removeLike(
+                                                                          context,
+                                                                          snapshot.data!.docs[index]
+                                                                              [
+                                                                              'caption'],
+                                                                          FirebaseAuth
+                                                                              .instance
+                                                                              .currentUser!
+                                                                              .uid);
+                                                                      return PostFunctions()
+                                                                          .onLikeButtonTapped(
+                                                                              isLiked);
+                                                                    },
+                                                                    likeCountPadding:
+                                                                       context.paddingMediumHorizontal,
+                                                                    likeCount: snapshotLikes
+                                                                        .data!
+                                                                        .docs
+                                                                        .length,
+                                                                    likeBuilder:
+                                                                        (_) {
+                                                                      return const Icon(
+                                                                          FontAwesomeIcons
+                                                                              .solidHeart,
+                                                                          size:
+                                                                              20.0,
+                                                                          color:
+                                                                              Colors.red);
+                                                                    },
+                                                                  );
+                                                                }
+                                                              }
+                                                              return LikeButton(
+                                                                onTap: (bool
+                                                                    isLiked) {
+                                                                  Provider.of<PostFunctions>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .addLike(
+                                                                          context,
+                                                                          snapshot.data!.docs[index]
+                                                                              [
+                                                                              'caption'],
+                                                                          FirebaseAuth
+                                                                              .instance
+                                                                              .currentUser!
+                                                                              .uid)
+                                                                      .whenComplete(
+                                                                          () {
+                                                                    //isLiked = true;
+                                                                  });
+                                                                  return PostFunctions()
+                                                                      .onLikeButtonTapped(
+                                                                          isLiked);
+                                                                },
+                                                                likeCountPadding:
+                                                                    context.paddingMediumHorizontal,
+                                                                size: 20.0,
+                                                                likeCount:
+                                                                    snapshotLikes
+                                                                        .data!
+                                                                        .docs
+                                                                        .length,
+                                                                //isLiked: isLiked,
+                                                              );
+                                                            }
+                                                          }),
+                                                      MaterialButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              PageTransition(
+                                                                  child: PostComments(
+                                                                      doc: snapshot
+                                                                              .data!
+                                                                              .docs[
+                                                                          index]),
+                                                                  type: PageTransitionType
+                                                                      .bottomToTop));
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: context.paddingLowHorizontal,
+                                                              child: const Icon(
+                                                                EvaIcons
+                                                                    .messageSquareOutline,
+                                                                size: 20.0,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                            ),
+                                                            StreamBuilder<
+                                                                QuerySnapshot>(
+                                                              stream: FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'posts')
+                                                                  .doc(snapshot
+                                                                          .data!
+                                                                          .docs[index]
+                                                                      [
+                                                                      'caption'])
+                                                                  .collection(
+                                                                      'comments')
+                                                                  .orderBy(
+                                                                      'time')
+                                                                  .snapshots(),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .connectionState ==
+                                                                    ConnectionState
+                                                                        .waiting) {
+                                                                  return const Center(
+                                                                      child:
+                                                                          CircularProgressIndicator());
+                                                                } else {
+                                                                  return Padding(
+                                                                    padding: context.paddingLowHorizontal,
+                                                                    child: Text(
+                                                                        snapshot
+                                                                            .data!
+                                                                            .docs
+                                                                            .length
+                                                                            .toString()),
+                                                                  );
+                                                                }
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : const Center(
+                                      child: Text(
+                                          'There is no posts from your following users.'),
+                                    );
+                            }
+                          })
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text('You are not following anyone'),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text('Please follow some people'),
+                            ],
+                          ),
+                        );
+                }
+              })
+        ],
+      ),
+    ));
   }
 
   Widget feedBody(BuildContext context) {
@@ -385,7 +755,7 @@ class FeedHelpers with ChangeNotifier {
                                                 ),
                                               )
                                             ],
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ),
