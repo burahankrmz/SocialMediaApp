@@ -18,6 +18,8 @@ import 'package:intl/intl.dart';
 
 class FeedHelpers with ChangeNotifier {
   ConstantColors constantColors = ConstantColors();
+  List<String> followingv2 = [];
+  List<String> postsId = [];
 
   AppBar appBar(BuildContext context) {
     return AppBar(
@@ -61,9 +63,317 @@ class FeedHelpers with ChangeNotifier {
     );
   }
 
-
-
-
+  Widget feedBodyV6(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('following')
+            .snapshots(),
+        builder: (context, followingList) {
+          if (followingList.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            followingv2.clear();
+            for (int i = 0; i < followingList.data!.docs.length; i++) {
+              followingv2.add(followingList.data!.docs[i]['useruid']);
+              debugPrint(followingv2.toString());
+            }
+            return followingv2.isNotEmpty
+                ? StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection("posts")
+                        .where('time')
+                        .where('useruid', whereIn: followingv2)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            //reverse: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 10.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: ListTile(
+                                          leading: Material(
+                                            color: Colors.transparent,
+                                            elevation: 15.0,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfileOtherUsers(
+                                                                userUid: snapshot
+                                                                        .data!
+                                                                        .docs[index]
+                                                                    [
+                                                                    'useruid'])));
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundImage:
+                                                    CachedNetworkImageProvider(
+                                                  snapshot.data!.docs[index]
+                                                      ['userimage'],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          title: Text(
+                                            snapshot.data!.docs[index]
+                                                ['username'],
+                                            style: const TextStyle(
+                                                fontSize: 13.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text(
+                                            PostFunctions().showTimeAgo(snapshot
+                                                .data!.docs[index]['time']),
+                                            style: const TextStyle(
+                                              fontSize: 10.0,
+                                            ),
+                                          ),
+                                          trailing: IconButton(
+                                            onPressed: () {
+                                              Provider.of<PostFunctions>(
+                                                      context,
+                                                      listen: false)
+                                                  .showPostOptions(context);
+                                            },
+                                            icon: const Icon(Icons.more_horiz),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          elevation: 20.0,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: CachedNetworkImage(
+                                              imageUrl: snapshot.data!
+                                                  .docs[index]['postimage'],
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  2.5,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) {
+                                                return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Text(
+                                          snapshot.data!.docs[index]['caption'],
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 14.0,
+                                          ),
+                                          StreamBuilder<QuerySnapshot>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('posts')
+                                                  .doc(snapshot.data!
+                                                      .docs[index]['caption'])
+                                                  .collection('likes')
+                                                  .snapshots(),
+                                              builder:
+                                                  (context, snapshotLikes) {
+                                                if (snapshotLikes
+                                                        .connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const CircularProgressIndicator();
+                                                } else {
+                                                  for (var snapshotfind
+                                                      in snapshotLikes
+                                                          .data!.docs) {
+                                                    if (snapshotfind[
+                                                            'useruid'] ==
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid) {
+                                                      return LikeButton(
+                                                        onTap: (bool isLiked) {
+                                                          Provider.of<PostFunctions>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .removeLike(
+                                                                  context,
+                                                                  snapshot.data!
+                                                                              .docs[
+                                                                          index]
+                                                                      [
+                                                                      'caption'],
+                                                                  FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid);
+                                                          return PostFunctions()
+                                                              .onLikeButtonTapped(
+                                                                  isLiked);
+                                                        },
+                                                        likeCountPadding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 8.0),
+                                                        likeCount: snapshotLikes
+                                                            .data!.docs.length,
+                                                        likeBuilder: (_) {
+                                                          return const Icon(
+                                                              FontAwesomeIcons
+                                                                  .solidHeart,
+                                                              size: 20.0,
+                                                              color:
+                                                                  Colors.red);
+                                                        },
+                                                      );
+                                                    }
+                                                  }
+                                                  return LikeButton(
+                                                    onTap: (bool isLiked) {
+                                                      Provider.of<PostFunctions>(
+                                                              context,
+                                                              listen: false)
+                                                          .addLike(
+                                                              context,
+                                                              snapshot.data!
+                                                                          .docs[
+                                                                      index]
+                                                                  ['caption'],
+                                                              FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser!
+                                                                  .uid)
+                                                          .whenComplete(() {
+                                                        //isLiked = true;
+                                                      });
+                                                      return PostFunctions()
+                                                          .onLikeButtonTapped(
+                                                              isLiked);
+                                                    },
+                                                    likeCountPadding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0),
+                                                    size: 20.0,
+                                                    likeCount: snapshotLikes
+                                                        .data!.docs.length,
+                                                    //isLiked: isLiked,
+                                                  );
+                                                }
+                                              }),
+                                          const SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          MaterialButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      child: PostComments(
+                                                          doc: snapshot.data!
+                                                              .docs[index]),
+                                                      type: PageTransitionType
+                                                          .bottomToTop));
+                                            },
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  EvaIcons.messageSquareOutline,
+                                                  size: 20.0,
+                                                  color: Colors.grey,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                StreamBuilder<QuerySnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection('posts')
+                                                      .doc(snapshot
+                                                              .data!.docs[index]
+                                                          ['caption'])
+                                                      .collection('comments')
+                                                      .orderBy('time')
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    } else {
+                                                      return Text(snapshot
+                                                          .data!.docs.length
+                                                          .toString());
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      }
+                    })
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text('You are not following anyone'),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text('Please follow some people'),
+                      ],
+                    ),
+                  );
+          }
+        });
+  }
 
   Widget feedBodyV4(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(

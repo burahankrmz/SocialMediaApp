@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -271,18 +272,34 @@ class PostCommentsHelper with ChangeNotifier {
                           color: Colors.white),
                     ),
                   ),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: CircleAvatar(
-                        radius: 20.0,
-                        backgroundImage: NetworkImage(
-                          doc['userimage'],
-                        ),
-                      ),
-                    ),
-                  ),
+                  prefixIcon: StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          dynamic userData = snapshot.data!.data();
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: CircleAvatar(
+                                radius: 20.0,
+                                backgroundImage: NetworkImage(
+                                  userData!['userimage'],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
                   ),

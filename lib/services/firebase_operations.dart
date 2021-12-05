@@ -18,11 +18,11 @@ class FirebaseOperations with ChangeNotifier {
   String get getInitUserName => initUserName!;
   String get getInitUserEmail => initUserEmail!;
 
-  Future initFollowersList() async {
+  Future initFollowingList() async {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('followers')
+        .collection('following')
         .get()
         .then((value) {
       for (int i = 0; i < value.docs.length; i++) {
@@ -35,19 +35,22 @@ class FirebaseOperations with ChangeNotifier {
     });
   }
 
-  Future initPost() async {
-    return FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('time', descending: true)
-        .snapshots();
-  }
-
-  initFollowersListv2() {
+  Future<List> initFollowingListv2() async {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('followers')
-        .snapshots();
+        .collection('following')
+        .get()
+        .then((value) {
+      for (int i = 0; i < value.docs.length; i++) {
+        followers.add(value.docs[i]['useruid'].toString());
+        //debugPrint(value.docs[i]['useruid']);
+      }
+      debugPrint(followers[0]);
+      //debugPrint(followers[0]);
+      notifyListeners();
+      return followers;
+    });
   }
 
   Future uploadUserAvatar(BuildContext context) async {
