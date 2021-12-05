@@ -33,9 +33,9 @@ class HomePageHelpers with ChangeNotifier {
         CustomNavigationBarItem(
           icon: const Icon(EvaIcons.home),
         ),
-        //CustomNavigationBarItem(
-          //icon: const Icon(Icons.message_rounded),
-        //),
+        CustomNavigationBarItem(
+          icon: const Icon(Icons.search),
+        ),
         CustomNavigationBarItem(
           icon: CircleAvatar(
             radius: 35.0,

@@ -9,10 +9,46 @@ import 'package:provider/provider.dart';
 
 class FirebaseOperations with ChangeNotifier {
   late UploadTask imageUploadTask;
+  List followers = [];
+  List get getFollowers => followers;
+
+  set setFollowers(List followers) => this.followers = followers;
   String? initUserEmail, initUserName, initUserImage;
   String get getInitUserImage => initUserImage!;
   String get getInitUserName => initUserName!;
   String get getInitUserEmail => initUserEmail!;
+
+  Future initFollowersList() async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('followers')
+        .get()
+        .then((value) {
+      for (int i = 0; i < value.docs.length; i++) {
+        followers.add(value.docs[i]['useruid']);
+        //debugPrint(value.docs[i]['useruid']);
+      }
+      debugPrint(followers[0]);
+      //debugPrint(followers[0]);
+      notifyListeners();
+    });
+  }
+
+  Future initPost() async {
+    return FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('time', descending: true)
+        .snapshots();
+  }
+
+  initFollowersListv2() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('followers')
+        .snapshots();
+  }
 
   Future uploadUserAvatar(BuildContext context) async {
     Reference imageReference = FirebaseStorage.instance.ref().child(
@@ -51,7 +87,7 @@ class FirebaseOperations with ChangeNotifier {
   Future initUserData(BuildContext context) {
     return FirebaseFirestore.instance
         .collection('users')
-        .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((doc) {
       debugPrint('fetcing user data');

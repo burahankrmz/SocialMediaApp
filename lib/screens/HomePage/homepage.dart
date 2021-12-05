@@ -4,6 +4,7 @@ import 'package:project2_social_media/screens/Feed/feed.dart';
 import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/screens/Profile/baseprofile.dart';
+import 'package:project2_social_media/screens/Search/search.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +21,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    Provider.of<LandingUtils>(context,listen: false).userAvatar = null;
+    Provider.of<LandingUtils>(context, listen: false).userAvatar = null;
+
     super.initState();
   }
 
@@ -32,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         controller: homepageController,
         children: [
           Feed(),
-          //Chatroom(),
+          const SearchPage(),
           BaseProfile(),
         ],
         physics: const ScrollPhysics(),

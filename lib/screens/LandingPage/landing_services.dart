@@ -445,7 +445,7 @@ class LandingService with ChangeNotifier {
                               .getUserAvatar,
                         ),
                       )
-                    : CircleAvatar(
+                    : const CircleAvatar(
                         radius: 50.0,
                         backgroundColor: Colors.grey,
                         child: Icon(
