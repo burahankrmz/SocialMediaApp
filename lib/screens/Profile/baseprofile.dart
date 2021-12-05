@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
 import 'package:project2_social_media/screens/Authentication/Login/loginpage.dart';
+import 'package:project2_social_media/screens/HomePage/homepage.dart';
 import 'package:project2_social_media/screens/Profile/baseprofile_helpers.dart';
 import 'package:provider/provider.dart';
 
@@ -62,9 +63,12 @@ class BaseProfile extends StatelessWidget {
           ),
         ],
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          },
           icon: Icon(
-            Icons.settings,
+            Icons.arrow_back,
             color: constantColors.darkColor,
           ),
         ),

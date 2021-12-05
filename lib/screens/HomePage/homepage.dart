@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     Provider.of<LandingUtils>(context, listen: false).userAvatar = null;
-
     super.initState();
   }
 

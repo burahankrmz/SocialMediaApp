@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project2_social_media/screens/Profile/baseprofile.dart';
 import 'package:project2_social_media/screens/Profile/profile_otherusers.dart';
 
 class SearchPage extends StatefulWidget {
@@ -17,7 +19,6 @@ class _SearchPageState extends State<SearchPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-
           title: searchWidget(),
         ),
         body: StreamBuilder<QuerySnapshot>(
@@ -34,12 +35,17 @@ class _SearchPageState extends State<SearchPage> {
                       DocumentSnapshot data = snapshot.data!.docs[index];
                       return ListTile(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileOtherUsers(
-                                      userUid: data
-                                          ['useruid'])));
+                          FirebaseAuth.instance.currentUser!.uid !=
+                                  data['useruid']
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProfileOtherUsers(
+                                          userUid: data['useruid'])))
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BaseProfile()));
                         },
                         leading: CircleAvatar(
                           backgroundImage: CachedNetworkImageProvider(

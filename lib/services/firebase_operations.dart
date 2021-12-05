@@ -35,6 +35,8 @@ class FirebaseOperations with ChangeNotifier {
     });
   }
 
+
+
   Future<List> initFollowingListv2() async {
     return FirebaseFirestore.instance
         .collection('users')
