@@ -28,7 +28,6 @@ class ProfileOtherUsersHelpers with ChangeNotifier {
       child: Container(
         color:Colors.white,
         width: MediaQuery.of(context).size.width,
-        margin: const EdgeInsets.only(top: 4, bottom: 4),
         child: Column(
           children: [
             Row(
