@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project2_social_media/extensions/context_extension.dart';
 import 'package:project2_social_media/screens/Profile/baseprofile.dart';
 import 'package:project2_social_media/screens/Profile/profile_otherusers.dart';
 
@@ -65,47 +66,30 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget searchWidget() {
-    return Container(
-      alignment: Alignment.center,
-      width: MediaQuery.of(context).size.width,
-      height: 60.0,
-      child: Container(
-        width: MediaQuery.of(context).size.width - 40.0,
-        height: 50.0,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6.0),
+    return Row(
+      children: [
+        Padding(
+          padding: context.paddingLowHorizontal,
+          child: const Icon(
+            Icons.search,
+            color: Colors.blueGrey,
+          ),
         ),
-        child: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(
-                left: 8.0,
-              ),
-              child: Icon(
-                Icons.search,
-                color: Colors.blueGrey,
-              ),
+        Flexible(
+          child: Padding(
+            padding: context.paddingLowHorizontal,
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  name = value;
+                });
+              },
+              decoration: const InputDecoration.collapsed(
+                  hintText: 'Search Your Friends...'),
             ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 8.0,
-                ),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      name = value;
-                    });
-                  },
-                  decoration: const InputDecoration.collapsed(
-                      hintText: 'Search Your Friends...'),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
