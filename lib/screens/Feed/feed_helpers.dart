@@ -81,10 +81,11 @@ class FeedHelpers with ChangeNotifier {
                   );
                 } else {
                   followingv2.clear();
+                  followingv2.add(FirebaseAuth.instance.currentUser!.uid);
                   for (int i = 0; i < followingList.data!.docs.length; i++) {
                     followingv2.add(followingList.data!.docs[i]['useruid']);
                   }
-                  followingv2.add(FirebaseAuth.instance.currentUser!.uid);
+
                   return followingv2.isNotEmpty
                       ? StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
@@ -111,6 +112,7 @@ class FeedHelpers with ChangeNotifier {
                                       : null;
                                 }
                               }
+                              userDatav2.sort((a, b) => ((b['time']) as Timestamp).toDate().compareTo((a['time'] as Timestamp).toDate()));
                               return userDatav2.isNotEmpty
                                   ? GridView.builder(
                                       shrinkWrap: true,

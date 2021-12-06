@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
-import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;

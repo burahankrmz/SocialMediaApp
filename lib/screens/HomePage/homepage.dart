@@ -5,7 +5,6 @@ import 'package:project2_social_media/screens/HomePage/homepage_helpers.dart';
 import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/screens/Profile/baseprofile.dart';
 import 'package:project2_social_media/screens/Search/search.dart';
-import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
