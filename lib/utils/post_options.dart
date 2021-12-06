@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:project2_social_media/constants/constantcolor.dart';
+import 'package:project2_social_media/screens/LandingPage/landing_utils.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -75,7 +76,8 @@ class PostFunctions with ChangeNotifier {
     return !isLiked;
   }
 
-  showPostOptions(BuildContext context) {
+  showPostOptions(
+      BuildContext context, QueryDocumentSnapshot<Object?> userDatav2) {
     return showModalBottomSheet(
         enableDrag: false,
         shape: const RoundedRectangleBorder(
@@ -126,11 +128,18 @@ class PostFunctions with ChangeNotifier {
                               child: const Text(
                                 'Yes',
                                 style: TextStyle(
-                                    //fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                    color: Colors.blue),
+                                    fontSize: 16.0, color: Colors.blue),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Provider.of<FirebaseOperations>(context,
+                                        listen: false)
+                                    .removePosts(userDatav2)
+                                    .whenComplete(() {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  warningText(context, 'Deleted Successfully');
+                                });
+                              },
                             ),
                           ],
                         );
@@ -166,6 +175,29 @@ class PostFunctions with ChangeNotifier {
                 },
               ),
             ],
+          );
+        });
+  }
+
+  warningText(BuildContext context, String warning) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(
+              color: constantColors.darkColor,
+            ),
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: Text(
+                warning,
+                style: TextStyle(
+                    color: constantColors.whiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0),
+              ),
+            ),
           );
         });
   }

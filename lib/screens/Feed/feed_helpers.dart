@@ -84,6 +84,7 @@ class FeedHelpers with ChangeNotifier {
                   for (int i = 0; i < followingList.data!.docs.length; i++) {
                     followingv2.add(followingList.data!.docs[i]['useruid']);
                   }
+                  followingv2.add(FirebaseAuth.instance.currentUser!.uid);
                   return followingv2.isNotEmpty
                       ? StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
@@ -148,21 +149,52 @@ class FeedHelpers with ChangeNotifier {
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      ProfileOtherUsers(
-                                                                          userUid:
-                                                                              userDatav2[index]['useruid'])));
+                                                          FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid !=
+                                                                  userDatav2[
+                                                                          index]
+                                                                      [
+                                                                      'useruid']
+                                                              ? Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              ProfileOtherUsers(userUid: userDatav2[index]['useruid'])))
+                                                              : null;
                                                         },
-                                                        child: CircleAvatar(
-                                                          backgroundImage:
-                                                              CachedNetworkImageProvider(
-                                                            userDatav2[index]
-                                                                ['userimage'],
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              userDatav2[index]
+                                                                  ['userimage'],
+                                                          imageBuilder: (context,
+                                                                  imageProvider) =>
+                                                              CircleAvatar(
+                                                            radius: 25,
+                                                            backgroundImage:
+                                                                imageProvider,
                                                           ),
-                                                          radius: 25,
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              const SizedBox(
+                                                            height: 25,
+                                                            width: 25,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                          Color>(
+                                                                      Colors
+                                                                          .blue),
+                                                            ),
+                                                          ),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              const Icon(
+                                                                  Icons.error),
                                                         ),
                                                       ),
                                                       Column(
@@ -193,17 +225,32 @@ class FeedHelpers with ChangeNotifier {
                                                           ),
                                                         ],
                                                       ),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          Provider.of<PostFunctions>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .showPostOptions(
-                                                                  context);
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.more_horiz),
-                                                      ),
+                                                      FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser!
+                                                                  .uid ==
+                                                              userDatav2[index]
+                                                                  ['useruid']
+                                                          ? IconButton(
+                                                              onPressed: () {
+                                                                Provider.of<PostFunctions>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .showPostOptions(
+                                                                        context,
+                                                                        userDatav2[
+                                                                            index]);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .more_horiz),
+                                                            )
+                                                          : SizedBox(
+                                                              width: context
+                                                                  .dynamicWidth(
+                                                                      0.1),
+                                                            ),
                                                     ],
                                                   ),
                                                 ),
@@ -262,9 +309,7 @@ class FeedHelpers with ChangeNotifier {
                                                               .instance
                                                               .collection(
                                                                   'posts')
-                                                              .doc(snapshot
-                                                                          .data!
-                                                                          .docs[
+                                                              .doc(userDatav2[
                                                                       index]
                                                                   ['caption'])
                                                               .collection(
@@ -370,9 +415,7 @@ class FeedHelpers with ChangeNotifier {
                                                               context,
                                                               PageTransition(
                                                                   child: PostComments(
-                                                                      doc: snapshot
-                                                                              .data!
-                                                                              .docs[
+                                                                      doc: userDatav2[
                                                                           index]),
                                                                   type: PageTransitionType
                                                                       .bottomToTop));
@@ -392,9 +435,8 @@ class FeedHelpers with ChangeNotifier {
                                                                   .instance
                                                                   .collection(
                                                                       'posts')
-                                                                  .doc(snapshot
-                                                                          .data!
-                                                                          .docs[index]
+                                                                  .doc(userDatav2[
+                                                                          index]
                                                                       [
                                                                       'caption'])
                                                                   .collection(
@@ -567,7 +609,8 @@ class FeedHelpers with ChangeNotifier {
                                                   Provider.of<PostFunctions>(
                                                           context,
                                                           listen: false)
-                                                      .showPostOptions(context);
+                                                      .showPostOptions(context,
+                                                          userDatav2[index]);
                                                 },
                                                 icon: const Icon(
                                                     Icons.more_horiz),

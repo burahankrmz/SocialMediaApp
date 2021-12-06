@@ -12,6 +12,7 @@ import 'package:project2_social_media/screens/PostComments/post_comments.dart';
 import 'package:project2_social_media/screens/Profile/profileinfohelpers.dart';
 import 'package:project2_social_media/services/firebase_operations.dart';
 import 'package:provider/provider.dart';
+import 'package:project2_social_media/extensions/context_extension.dart';
 
 class BaseProfileHelpers with ChangeNotifier {
   ConstantColors constantColors = ConstantColors();
@@ -27,8 +28,8 @@ class BaseProfileHelpers with ChangeNotifier {
     return SliverToBoxAdapter(
       child: Container(
         color: Colors.white,
-        width: MediaQuery.of(context).size.width,
-        margin: const EdgeInsets.only(top: 4, bottom: 4),
+        width: context.dynamicWidth(1),
+        //margin: const EdgeInsets.only(top: 4, bottom: 4),
         child: Column(
           children: [
             Row(
@@ -99,7 +100,7 @@ class BaseProfileHelpers with ChangeNotifier {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: PostComments(doc: snapshot.data!.docs[index]),
+                  child: PostComments(doc: snapshot.data!.docs[index],),
                   type: PageTransitionType.fade,
                 ),
               );

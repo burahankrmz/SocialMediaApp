@@ -9,6 +9,7 @@ import 'package:project2_social_media/services/authentication.dart';
 import 'package:provider/provider.dart';
 
 class FirebaseOperations with ChangeNotifier {
+  String? postId;
   late UploadTask imageUploadTask;
   List followers = [];
   List get getFollowers => followers;
@@ -136,4 +137,34 @@ class FirebaseOperations with ChangeNotifier {
           .delete();
     });
   }
+
+  Future removePosts(postData) async {
+    debugPrint(postData['caption']);
+    return FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postData['caption'])
+        .delete()
+        .whenComplete(() {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('posts')
+          .where('caption', isEqualTo: postData['caption'])
+          .get()
+          .then((value) {
+        debugPrint('ABCDE' + value.docs.first.id);
+        postId = value.docs.first.id;
+      }).whenComplete(() {
+        debugPrint(postId);
+        return FirebaseFirestore.instance
+            .collection('users')
+            .doc(postData['useruid'])
+            .collection('posts')
+            .doc(postId)
+            .delete();
+      });
+    });
+  }
+
+
 }

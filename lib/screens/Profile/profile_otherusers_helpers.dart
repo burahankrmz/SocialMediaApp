@@ -99,7 +99,7 @@ class ProfileOtherUsersHelpers with ChangeNotifier {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: PostComments(doc: snapshot.data!.docs[index]),
+                  child: PostComments(doc: snapshot.data!.docs[index],),
                   type: PageTransitionType.fade,
                 ),
               );

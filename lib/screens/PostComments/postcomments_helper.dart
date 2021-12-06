@@ -32,11 +32,20 @@ class PostCommentsHelper with ChangeNotifier {
           children: [
             Material(
               color: Colors.transparent,
-              child: CircleAvatar(
-                radius: 20.0,
-                backgroundImage: NetworkImage(
-                  doc['userimage'],
+              child: CachedNetworkImage(
+                imageUrl: doc['userimage'],
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  radius: 20,
+                  backgroundImage: imageProvider,
                 ),
+                placeholder: (context, url) => const SizedBox(
+                  height: 25,
+                  width: 25,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             const SizedBox(
@@ -53,7 +62,7 @@ class PostCommentsHelper with ChangeNotifier {
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
-                 Text(
+                Text(
                   PostFunctions().showTimeAgo(
                     doc['time'],
                   ),
@@ -71,6 +80,7 @@ class PostCommentsHelper with ChangeNotifier {
   }
 
   postBody(BuildContext context, QueryDocumentSnapshot<Object?> doc) {
+    //debugPrint(doc.reference.parent.toString());
     return Material(
       borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(25.0),
@@ -103,6 +113,7 @@ class PostCommentsHelper with ChangeNotifier {
                 ),
               ),
             ),
+            //Text(doc['caption'])
           ],
         ),
       ),
@@ -170,12 +181,30 @@ class PostCommentsHelper with ChangeNotifier {
                                                 vertical: 12.0),
                                             child: Material(
                                               color: Colors.transparent,
-                                              child: CircleAvatar(
-                                                radius: 20.0,
-                                                backgroundImage: NetworkImage(
-                                                  snapshot.data!.docs[index]
-                                                      ['userimage'],
+                                              child: CachedNetworkImage(
+                                                imageUrl: snapshot.data!
+                                                    .docs[index]['userimage'],
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundImage:
+                                                      imageProvider,
                                                 ),
+                                                placeholder: (context, url) =>
+                                                    const SizedBox(
+                                                  height: 25,
+                                                  width: 25,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(Colors.blue),
+                                                  ),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
                                               ),
                                             ),
                                           ),
