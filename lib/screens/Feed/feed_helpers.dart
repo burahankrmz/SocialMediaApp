@@ -30,13 +30,6 @@ class FeedHelpers with ChangeNotifier {
   AppBar appBar(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      leading: IconButton(
-        onPressed: () {},
-        icon: const Icon(
-          Icons.menu_sharp,
-          color: Colors.black,
-        ),
-      ),
       title: RichText(
         text: TextSpan(
           text: 'Social ',
@@ -125,17 +118,18 @@ class FeedHelpers with ChangeNotifier {
                                       gridDelegate:
                                           const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 1,
-                                              childAspectRatio: 1,
+                                              childAspectRatio: 0.8,
                                               // crossAxisSpacing: 12,
                                               mainAxisSpacing: 10),
                                       itemBuilder: (context, index) {
                                         return Card(
                                           shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0)),
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
                                           child: Padding(
-                                            padding:
-                                                context.paddingHighHorizontal,
+                                            padding: context
+                                                .paddingHighHorizontalMediumVertical,
                                             child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceEvenly,
@@ -143,58 +137,82 @@ class FeedHelpers with ChangeNotifier {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Expanded(
-                                                  flex: 2,
-                                                  child: ListTile(
-                                                    leading: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    ProfileOtherUsers(
-                                                                        userUid:
-                                                                            userDatav2[index]['useruid'])));
-                                                      },
-                                                      child: CircleAvatar(
-                                                        backgroundImage:
-                                                            CachedNetworkImageProvider(
-                                                          userDatav2[index]
-                                                              ['userimage'],
+                                                  flex: 1,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      ProfileOtherUsers(
+                                                                          userUid:
+                                                                              userDatav2[index]['useruid'])));
+                                                        },
+                                                        child: CircleAvatar(
+                                                          backgroundImage:
+                                                              CachedNetworkImageProvider(
+                                                            userDatav2[index]
+                                                                ['userimage'],
+                                                          ),
+                                                          radius: 25,
                                                         ),
                                                       ),
-                                                    ),
-                                                    title: Text(
-                                                      userDatav2[index]
-                                                          ['username'],
-                                                      style: const TextStyle(
-                                                          fontSize: 13.0,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    subtitle: Text(
-                                                      PostFunctions()
-                                                          .showTimeAgo(
-                                                              userDatav2[index]
-                                                                  ['time']),
-                                                      style: const TextStyle(
-                                                        fontSize: 10.0,
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            userDatav2[index]
+                                                                ['username'],
+                                                            style: const TextStyle(
+                                                                fontSize: 13.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            PostFunctions()
+                                                                .showTimeAgo(
+                                                                    userDatav2[
+                                                                            index]
+                                                                        [
+                                                                        'time']),
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 10.0,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                    trailing: IconButton(
-                                                      onPressed: () {
-                                                        Provider.of<PostFunctions>(
-                                                                context,
-                                                                listen: false)
-                                                            .showPostOptions(
-                                                                context);
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.more_horiz),
-                                                    ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          Provider.of<PostFunctions>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .showPostOptions(
+                                                                  context);
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.more_horiz),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
+                                                SizedBox(
+                                                  height: context
+                                                      .dynamicHeight(0.02),
+                                                ),
                                                 Expanded(
-                                                  flex: 6,
+                                                  flex: 7,
                                                   child: ClipRRect(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -205,7 +223,7 @@ class FeedHelpers with ChangeNotifier {
                                                               ['postimage'],
                                                       width: context
                                                           .dynamicWidth(0.9),
-                                                      fit: BoxFit.cover,
+                                                      fit: BoxFit.fitWidth,
                                                       placeholder:
                                                           (context, url) {
                                                         return const Center(
@@ -216,12 +234,15 @@ class FeedHelpers with ChangeNotifier {
                                                     ),
                                                   ),
                                                 ),
+                                                SizedBox(
+                                                  height: context
+                                                      .dynamicHeight(0.02),
+                                                ),
                                                 Expanded(
                                                   flex: 1,
                                                   child: Padding(
                                                     padding: context
-                                                        .dynamicVerticalPadding(
-                                                            0.01),
+                                                        .paddingLowVertical,
                                                     child: Text(
                                                       userDatav2[index]
                                                           ['caption'],
@@ -268,6 +289,7 @@ class FeedHelpers with ChangeNotifier {
                                                                         .currentUser!
                                                                         .uid) {
                                                                   return LikeButton(
+                                                                    size: 20,
                                                                     onTap: (bool
                                                                         isLiked) {
                                                                       Provider.of<PostFunctions>(context, listen: false).removeLike(
@@ -284,7 +306,8 @@ class FeedHelpers with ChangeNotifier {
                                                                               isLiked);
                                                                     },
                                                                     likeCountPadding:
-                                                                       context.paddingMediumHorizontal,
+                                                                        context
+                                                                            .paddingOnlyLeftLow,
                                                                     likeCount: snapshotLikes
                                                                         .data!
                                                                         .docs
@@ -327,7 +350,10 @@ class FeedHelpers with ChangeNotifier {
                                                                           isLiked);
                                                                 },
                                                                 likeCountPadding:
-                                                                    context.paddingMediumHorizontal,
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            8.0),
                                                                 size: 20.0,
                                                                 likeCount:
                                                                     snapshotLikes
@@ -353,15 +379,12 @@ class FeedHelpers with ChangeNotifier {
                                                         },
                                                         child: Row(
                                                           children: [
-                                                            Padding(
-                                                              padding: context.paddingLowHorizontal,
-                                                              child: const Icon(
-                                                                EvaIcons
-                                                                    .messageSquareOutline,
-                                                                size: 20.0,
-                                                                color:
-                                                                    Colors.grey,
-                                                              ),
+                                                            const Icon(
+                                                              EvaIcons
+                                                                  .messageSquareOutline,
+                                                              size: 20.0,
+                                                              color:
+                                                                  Colors.grey,
                                                             ),
                                                             StreamBuilder<
                                                                 QuerySnapshot>(
@@ -390,13 +413,13 @@ class FeedHelpers with ChangeNotifier {
                                                                           CircularProgressIndicator());
                                                                 } else {
                                                                   return Padding(
-                                                                    padding: context.paddingLowHorizontal,
-                                                                    child: Text(
-                                                                        snapshot
-                                                                            .data!
-                                                                            .docs
-                                                                            .length
-                                                                            .toString()),
+                                                                    padding: context
+                                                                        .paddingOnlyLeftLow,
+                                                                    child: Text(snapshot
+                                                                        .data!
+                                                                        .docs
+                                                                        .length
+                                                                        .toString()),
                                                                   );
                                                                 }
                                                               },

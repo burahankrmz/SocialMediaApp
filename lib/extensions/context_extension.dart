@@ -22,6 +22,11 @@ extension PaddingExtension on BuildContext {
   EdgeInsets dynamicHorizontalPadding(double val) =>
       EdgeInsets.symmetric(vertical: dynamicWidth(val));
   EdgeInsets get paddingAllLow => EdgeInsets.all(dynamicHeight(0.01));
+  EdgeInsets get paddingAllHigh => EdgeInsets.all(dynamicHeight(0.03));
+  EdgeInsets get paddingHighHorizontalMediumVertical => EdgeInsets.symmetric(
+      vertical: dynamicHeight(0.02), horizontal: dynamicHeight(0.03));
+      EdgeInsets get paddingOnlyLeftLow =>
+      EdgeInsets.only(left: dynamicHeight(0.01));
   EdgeInsets get paddingLowHorizontal =>
       EdgeInsets.symmetric(horizontal: dynamicHeight(0.01));
   EdgeInsets get paddingMediumHorizontal =>
