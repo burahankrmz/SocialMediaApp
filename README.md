@@ -69,7 +69,7 @@ And you will see app on simulator.
 #User Profile
 
 <div align="start">
-    <img src="https://user-images.githubusercontent.com/76684491/145615048-e10f31b3-624b-4e0b-80a7-9d2ece05968d.png" width="200px"</img>
+    <img src="https://user-images.githubusercontent.com/76684491/145623196-7a4ff92b-4e32-4438-8fa9-799f1d8992aa.png" width="200px"</img>
 </div>
 
 #Following Followers Page
