@@ -12,8 +12,10 @@ In this mobile application, users can communicate with peoples.
 
 ## Features
 
-- You can register/login with your mail or google account. 
+- You can register/login with your mail or google account.
+- You will give error when you input wrong information.
 - You can follow other peoples and other peoples can follow you.
+- You can search other users.
 - You can upload post from gallery or camera.
 - You will have own profile and you can see other peoples profile.
 - You can like or comments posts.
@@ -32,17 +34,48 @@ Open codes from Visual Studio Code or Android Studio IDE. Click run button.
 And you will see app on simulator.
 
 
-#Some Photos From Application
+#Authentication Pages
 
 <div align="start">
-    <img src="https://user-images.githubusercontent.com/76684491/143051304-eb8d33d1-7b62-4531-8dd1-60eacfe4d795.png" width="200px"</img>
-    <img src="https://user-images.githubusercontent.com/76684491/143051307-3c793b6d-7d61-4221-846a-d636df833808.png" width="200px"</img> 
-  <img src="https://user-images.githubusercontent.com/76684491/143051311-40a771e1-fef1-436b-8f33-bf19647fc7dc.png" width="200px"</img> 
-  
+    <img src="https://user-images.githubusercontent.com/76684491/145614225-a41b62e5-87ca-4ba6-8b3a-1de838565899.png" width="200px"</img>
+    <img src="https://user-images.githubusercontent.com/76684491/145614245-6c3017cf-390a-4564-a7a1-ecc9461f1265.png" width="200px"</img> 
+
 </div>
+
+#Feed Page
+
 <div align="start">
-    <img src="https://user-images.githubusercontent.com/76684491/143051317-9204a80e-0724-47f5-a844-e74408f57c20.png" width="200px"</img>
-    <img src="https://user-images.githubusercontent.com/76684491/143051324-a9a8500a-e2c5-4742-930c-98403c3d3b8b.png" width="200px"</img> 
-  
+    <img src="https://user-images.githubusercontent.com/76684491/145614511-aa3924af-c444-4b7b-b555-e6beb41f4214.png" width="200px"</img>
+</div>
+
+#Post Comments Page
+
+<div align="start">
+    <img src="https://user-images.githubusercontent.com/76684491/145614602-743cf51d-3659-49c8-8f66-6b565f1c1b03.png" width="200px"</img>
+</div>
+
+#Search Page
+
+<div align="start">
+    <img src="https://user-images.githubusercontent.com/76684491/145614850-d618dc86-196e-4a7e-bc41-6c5d7295aa25.png" width="200px"</img>
+</div>
+
+#Other Users Profile
+
+<div align="start">
+    <img src="https://user-images.githubusercontent.com/76684491/145614974-9a6ae010-03ed-4e19-93d5-a3b1370ed24b.png" width="200px"</img>
+</div>
+
+#User Profile
+
+<div align="start">
+    <img src="https://user-images.githubusercontent.com/76684491/145615048-e10f31b3-624b-4e0b-80a7-9d2ece05968d.png" width="200px"</img>
+</div>
+
+#Following Followers Page
+
+<div align="start">
+    <img src="https://user-images.githubusercontent.com/76684491/145615144-c24dbdbd-64fe-48a7-b863-e6957049876a.png" width="200px"</img>
+    <img src="https://user-images.githubusercontent.com/76684491/145615199-ec19f54f-96be-4094-b301-46760820f365.png" width="200px"</img>
 </div>
 
